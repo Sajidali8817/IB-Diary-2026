@@ -32,7 +32,8 @@ const performAuthRefresh = async (refreshToken) => {
             console.log('🔄 [Auth] Sending refresh request...');
             // Backend requires refresh_token in Query Params (validated by 422 error loc: ["query", "refresh_token"])
             // We also send an empty JSON body to prevent potential 500 errors if the server expects a body payload.
-            const response = await fetch(`${BASE_URL}/auth/refresh?refresh_token=${encodeURIComponent(refreshToken)}`, {
+            const url = `${BASE_URL}${BASE_URL ? '' : '/api'}/auth/refresh?refresh_token=${encodeURIComponent(refreshToken)}`;
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
