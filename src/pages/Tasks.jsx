@@ -53,6 +53,7 @@ const Tasks = () => {
     const [completionRemark, setCompletionRemark] = useState('');
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [taskToDelete, setTaskToDelete] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState('All');
     const activeDateRef = useRef(null);
 
     useEffect(() => {
@@ -77,18 +78,25 @@ const Tasks = () => {
     const filteredTasks = useMemo(() => {
         return tasks
             .filter(task => {
-                if (!task.dueDate) return false;
-                const taskDate = new Date(task.dueDate);
+                // Date logic
+                const taskDate = new Date(task.dueDate || task.due_date);
                 if (isNaN(taskDate)) return false;
-                return isSameDay(taskDate, selectedDate);
+                const matchesDate = isSameDay(taskDate, selectedDate);
+
+                // Category logic
+                const matchesCategory = selectedCategory === 'All' ||
+                    task.category?.toLowerCase() === selectedCategory.toLowerCase();
+
+                return matchesDate && matchesCategory;
             })
             .sort((a, b) => {
                 if (a.isPinned && !b.isPinned) return -1;
                 if (!a.isPinned && b.isPinned) return 1;
-                if (a.dueTime && b.dueTime) return a.dueTime.localeCompare(b.dueTime);
-                return 0;
+                const timeA = a.dueTime || "00:00";
+                const timeB = b.dueTime || "00:00";
+                return timeA.localeCompare(timeB);
             });
-    }, [tasks, selectedDate]);
+    }, [tasks, selectedDate, selectedCategory]);
 
     const getDateStatus = (date) => {
         if (!date) return null;
@@ -197,7 +205,14 @@ const Tasks = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="bg-slate-900/50 backdrop-blur-xl rounded-[2rem] p-6 border border-white/5 mb-8 shadow-2xl"
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(e, info) => {
+                    if (info.offset.x > 100) changeMonth(-1);
+                    else if (info.offset.x < -100) changeMonth(1);
+                }}
+                className="bg-slate-900/50 backdrop-blur-xl rounded-[1.5rem] sm:rounded-[2.2rem] p-4 sm:p-6 border border-white/5 mb-8 shadow-2xl overflow-hidden"
             >
                 <div className="flex justify-between items-center mb-6">
                     <button onClick={() => changeMonth(-1)} className="p-3 bg-slate-800 rounded-xl hover:bg-slate-700 transition-colors">
@@ -284,12 +299,12 @@ const Tasks = () => {
         };
 
         return (
-            <motion.div layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex gap-6 mb-8 group">
-                <div className="flex flex-col items-center min-w-[70px] pt-1">
-                    <span className={`text-sm font-black tracking-tight ${isOverdue && !isCompleted ? 'text-red-500' : 'text-slate-400'}`}>
+            <motion.div layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex gap-2 sm:gap-4 md:gap-6 mb-8 group">
+                <div className="flex flex-col items-center min-w-[55px] sm:min-w-[70px] pt-1">
+                    <span className={`text-[12px] sm:text-sm font-black tracking-tight ${isOverdue && !isCompleted ? 'text-red-500' : 'text-slate-400'}`}>
                         {timeDisplay.split(' ')[0]}
                     </span>
-                    <span className="text-[10px] font-black text-slate-600 mt-1 uppercase tracking-widest">
+                    <span className="text-[9px] sm:text-[10px] font-black text-slate-600 mt-0 sm:mt-1 uppercase tracking-widest">
                         {timeDisplay.split(' ')[1]}
                     </span>
                     <div className={`w-[2px] mt-4 rounded-full flex-1 min-h-[50px] ${isOverdue && !isCompleted ? 'bg-red-500/20' : 'bg-slate-800/50'}`} />
@@ -298,7 +313,7 @@ const Tasks = () => {
                 <motion.div
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
-                    className={`flex-1 bg-slate-900/40 backdrop-blur-xl rounded-[2.5rem] border-2 p-6 transition-all shadow-2xl relative overflow-hidden`}
+                    className={`flex-1 bg-slate-900/40 backdrop-blur-xl rounded-[1.8rem] sm:rounded-[2.5rem] border-2 p-4 sm:p-6 transition-all shadow-2xl relative overflow-hidden`}
                     style={{ borderColor: task.isPinned ? '#F59E0B' : hexToRgba(borderColor, 0.3) }}
                 >
                     {task.isPinned && (
@@ -343,8 +358,8 @@ const Tasks = () => {
                     <AnimatePresence>
                         {isExpanded && (
                             <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="mt-6 pt-6 border-t border-white/5 flex gap-3">
-                                <button onClick={() => handleCompletionPress(task.id)} className={`flex-1 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${isCompleted ? 'bg-slate-800 text-slate-400' : 'bg-emerald-500 text-white'}`}>
-                                    {isCompleted ? <MdRefresh size={16} /> : <MdCheck size={16} />}
+                                <button onClick={() => handleCompletionPress(task.id)} className={`flex-1 py-3 px-2 rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest flex items-center justify-center gap-1 sm:gap-2 transition-all ${isCompleted ? 'bg-slate-800 text-slate-400' : 'bg-emerald-500 text-white'}`}>
+                                    {isCompleted ? <MdRefresh size={14} className="sm:size-[16px]" /> : <MdCheck size={14} className="sm:size-[16px]" />}
                                     {isCompleted ? 'Redo' : 'Complete'}
                                 </button>
                                 <button onClick={() => handleEdit(task)} className="bg-slate-800 text-blue-400 p-3 rounded-2xl border border-white/5 hover:bg-slate-700 transition-all">
@@ -384,7 +399,30 @@ const Tasks = () => {
                 </header>
             </div>
 
-            <div className="p-6">
+            <div className="px-4 sm:px-6 pt-6">
+                {/* Category Filter */}
+                <div className="mb-6 overflow-x-auto no-scrollbar -mx-4 px-4">
+                    <div className="flex gap-2 min-w-max">
+                        {['All', ...Object.keys(CATEGORY_ICONS)].map((cat) => {
+                            const isSelected = selectedCategory.toLowerCase() === cat.toLowerCase();
+                            return (
+                                <button
+                                    key={cat}
+                                    onClick={() => setSelectedCategory(cat === 'All' ? 'All' : cat)}
+                                    className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl border transition-all text-[11px] font-black uppercase tracking-widest ${isSelected
+                                        ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-600/30'
+                                        : 'bg-slate-900/60 border-white/5 text-slate-500 hover:text-slate-300'
+                                        }`}
+                                >
+                                    <span className="text-sm">
+                                        {cat === 'All' ? <MdAssignment /> : CATEGORY_ICONS[cat.toLowerCase()]}
+                                    </span>
+                                    {cat}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
                 {/* Calendar Dropdown */}
                 <AnimatePresence>
                     {calendarVisible && renderCalendar()}
@@ -392,8 +430,8 @@ const Tasks = () => {
 
                 {/* Date Strip */}
                 {!calendarVisible && (
-                    <div className="mb-10 overflow-x-auto no-scrollbar pt-2 pb-4">
-                        <div className="flex gap-3">
+                    <div className="mb-8 overflow-x-auto no-scrollbar -mx-4 px-4">
+                        <div className="flex gap-3 min-w-max pb-2">
                             {stripDates.map((date, idx) => {
                                 const isSelected = isSameDay(date, selectedDate);
                                 return (
@@ -401,13 +439,13 @@ const Tasks = () => {
                                         key={idx}
                                         ref={isSelected ? activeDateRef : null}
                                         onClick={() => setSelectedDate(date)}
-                                        className={`flex flex-col items-center justify-center min-w-[64px] h-20 rounded-3xl transition-all ${isSelected
+                                        className={`flex flex-col items-center justify-center min-w-[60px] h-18 sm:h-20 rounded-[1.5rem] sm:rounded-3xl transition-all ${isSelected
                                             ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/30 font-black'
                                             : 'bg-slate-900/40 text-slate-500 hover:text-slate-300 border border-white/5'
                                             }`}
                                     >
-                                        <span className="text-[10px] font-black uppercase tracking-widest mb-1">{date.toLocaleDateString('en-US', { weekday: 'short' })}</span>
-                                        <span className="text-xl font-black font-outfit">{date.getDate()}</span>
+                                        <span className="text-[9px] font-black uppercase tracking-widest mb-1">{date.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                                        <span className="text-lg sm:text-xl font-black font-outfit">{date.getDate()}</span>
                                     </button>
                                 );
                             })}
