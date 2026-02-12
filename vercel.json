@@ -19,6 +19,10 @@
         {
             "source": "/master/:match*",
             "destination": "https://ibnotes.abisexport.com/master/:match*"
+        },
+        {
+            "source": "/((?!api|auth|user-data|scheduler|chat|master).*)",
+            "destination": "/index.html"
         }
     ]
 }
