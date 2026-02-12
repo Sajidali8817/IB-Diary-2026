@@ -1,27 +1,11 @@
 {
     "rewrites": [
         {
-            "source": "/auth/:match*",
-            "destination": "https://ibnotes.abisexport.com/auth/:match*"
+            "source": "/api/:match*",
+            "destination": "https://ibnotes.abisexport.com/:match*"
         },
         {
-            "source": "/user-data/:match*",
-            "destination": "https://ibnotes.abisexport.com/user-data/:match*"
-        },
-        {
-            "source": "/scheduler/:match*",
-            "destination": "https://ibnotes.abisexport.com/scheduler/:match*"
-        },
-        {
-            "source": "/chat/:match*",
-            "destination": "https://ibnotes.abisexport.com/chat/:match*"
-        },
-        {
-            "source": "/master/:match*",
-            "destination": "https://ibnotes.abisexport.com/master/:match*"
-        },
-        {
-            "source": "/((?!api|auth|user-data|scheduler|chat|master).*)",
+            "source": "/((?!api).*)",
             "destination": "/index.html"
         }
     ]

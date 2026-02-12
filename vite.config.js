@@ -73,34 +73,10 @@ export default defineConfig({
         host: true,
 
         proxy: {
-            '/auth': {
+            '/api': {
                 target: 'https://ibnotes.abisexport.com',
                 changeOrigin: true,
-                secure: false
-            },
-            '/user-data': {
-                target: 'https://ibnotes.abisexport.com',
-                changeOrigin: true,
-                secure: false
-            },
-            '/scheduler': {
-                target: 'https://ibnotes.abisexport.com',
-                changeOrigin: true,
-                secure: false,
-                bypass: (req) => {
-                    if (req.headers.accept?.indexOf('text/html') !== -1) {
-                        return '/index.html';
-                    }
-                }
-            },
-            '/chat': {
-                target: 'https://ibnotes.abisexport.com',
-                changeOrigin: true,
-                secure: false
-            },
-            '/master': {
-                target: 'https://ibnotes.abisexport.com',
-                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/api/, ''),
                 secure: false
             }
         }

@@ -106,7 +106,7 @@ const apiRequest = async (endpoint, method = 'GET', body = null, retryCount = 0)
         }
     }
 
-    const url = `${BASE_URL}${endpoint}`;
+    const url = `${BASE_URL}${BASE_URL ? '' : '/api'}${endpoint}`;
     console.log(`🌐 [API Request] ${method} ${url}`);
 
     try {
