@@ -61,27 +61,37 @@ const TaskAlertManager = () => {
     useEffect(() => {
         // Diagnostic Check on Mount
         const checkEnvironment = async () => {
-            // 1. Check for Secure Context (Required for Service Workers)
+            // 1. Check for Secure Context
             if (!window.isSecureContext) {
-                console.warn('⚠️ App is running in an Insecure Context. Service Worker and Background Alerts will NOT work.');
-                toast.error('Background Alerts disabled: App must use HTTPS or localhost.', {
-                    duration: 10000,
-                    icon: '🔒',
-                    id: 'insecure-origin-warning'
-                });
+                console.warn('⚠️ Insecure Context');
+                toast.error('Background Alerts disabled: App must use HTTPS.', { id: 'insecure-origin-warning' });
             }
 
             // 2. Check Notification Permission
             if ('Notification' in window) {
+                console.log('📢 Current Notification Permission:', Notification.permission);
                 if (Notification.permission === 'denied') {
                     toast.error('Alerts Blocked: Please enable Notifications in browser settings.', {
                         duration: 10000,
                         icon: '🚫',
                         id: 'permission-denied-warning'
                     });
+                } else if (Notification.permission === 'default') {
+                    toast.promise(
+                        Notification.requestPermission(),
+                        {
+                            loading: 'Requesting permission for notifications...',
+                            success: (permission) => {
+                                if (permission === 'granted') return 'Notifications enabled! ✅';
+                                return 'Permission denied. ❌';
+                            },
+                            error: 'Could not request permission.',
+                        },
+                        { id: 'permission-request-toast', duration: 5000 }
+                    );
                 }
             } else {
-                toast.error('Notifications not supported by this browser.', { icon: '❌', id: 'not-supported-warning' });
+                toast.error('Notifications not supported.', { id: 'not-supported-warning' });
             }
         };
 
@@ -232,6 +242,7 @@ const TaskAlertManager = () => {
 
         // 3. System Notification
         if ('serviceWorker' in navigator && Notification.permission === 'granted') {
+            console.log('🚀 Triggering System Notification for:', task.title);
             navigator.serviceWorker.ready.then(registration => {
                 registration.showNotification('⏰ Task Alarm!', {
                     body: `It's time for: ${task.title}`,
@@ -242,8 +253,14 @@ const TaskAlertManager = () => {
                     requireInteraction: true,
                     vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 500],
                     data: { taskId: task.id }
+                }).then(() => {
+                    console.log('✅ System Notification shown successfully');
+                }).catch(err => {
+                    console.error('❌ Failed to show System Notification:', err);
                 });
             });
+        } else {
+            console.warn('⚠️ System Notification skipped. SW:', 'serviceWorker' in navigator, 'Permission:', Notification.permission);
         }
     };
 
