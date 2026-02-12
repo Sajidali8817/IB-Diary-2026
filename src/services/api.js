@@ -191,21 +191,11 @@ export const apiService = {
     updateNote: (id, data) => apiRequest(`/user-data/notes/${id}`, 'PUT', data),
     deleteNote: (id) => apiRequest(`/user-data/notes/${id}`, 'DELETE'),
 
-    // Master Data (HODs, Plants, Hatcheries)
+    // Master Data (HODs)
     getHods: (search = '') => apiRequest(`/scheduler/search-hod?q=${encodeURIComponent(search)}`),
     createHod: (data) => apiRequest('/master/hod', 'POST', data),
     updateHod: (id, data) => apiRequest(`/master/hod/${id}`, 'PUT', data),
     deleteHod: (id) => apiRequest(`/master/hod/${id}`, 'DELETE'),
-
-    getPlants: (search = '') => apiRequest(`/master/plant${search ? `?search=${search}` : ''}`),
-    createPlant: (data) => apiRequest('/master/plant', 'POST', data),
-    updatePlant: (id, data) => apiRequest(`/master/plant/${id}`, 'PUT', data),
-    deletePlant: (id) => apiRequest(`/master/plant/${id}`, 'DELETE'),
-
-    getHatcheries: (plantId = null) => apiRequest(`/master/hatchery${plantId ? `?plant_id=${plantId}` : ''}`),
-    createHatchery: (data) => apiRequest('/master/hatchery', 'POST', data),
-    updateHatchery: (id, data) => apiRequest(`/master/hatchery/${id}`, 'PUT', data),
-    deleteHatchery: (id) => apiRequest(`/master/hatchery/${id}`, 'DELETE'),
 
     // Scheduler
     scheduleMessage: (data) => apiRequest('/scheduler/', 'POST', data),

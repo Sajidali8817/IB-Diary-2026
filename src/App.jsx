@@ -11,8 +11,6 @@ import Notes from './pages/Notes';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import HODManagement from './pages/admin/HODManagement';
-import PlantManagement from './pages/admin/PlantManagement';
-import HatcheryManagement from './pages/admin/HatcheryManagement';
 import Journey from './pages/Journey';
 import Scheduler from './pages/Scheduler';
 import AddScheduler from './pages/AddScheduler';
@@ -41,8 +39,6 @@ function App() {
                                         <Route path="/profile" element={<Profile />} />
                                         <Route path="/admin" element={<AdminDashboard />} />
                                         <Route path="/admin/hods" element={<HODManagement />} />
-                                        <Route path="/admin/plants" element={<PlantManagement />} />
-                                        <Route path="/admin/hatcheries" element={<HatcheryManagement />} />
                                         <Route path="/journey" element={<Journey />} />
                                         <Route path="/scheduler" element={<Scheduler />} />
                                         <Route path="/scheduler/add" element={<AddScheduler />} />

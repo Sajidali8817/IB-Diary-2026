@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
     MdArrowBack, MdAccountCircle, MdSearch, MdClose,
     MdEmail, MdWhatsapp, MdCalendarToday, MdAccessTime,
-    MdSend, MdFactory, MdEgg
+    MdSend
 } from 'react-icons/md';
 import { motion, AnimatePresence } from 'framer-motion';
 import { apiService } from '../services/api';
@@ -27,11 +27,6 @@ const AddScheduler = () => {
     const [hodSuggestions, setHodSuggestions] = useState([]);
     const [searchingHods, setSearchingHods] = useState(false);
 
-    // Location State
-    const [plants, setPlants] = useState([]);
-    const [hatcheries, setHatcheries] = useState([]);
-    const [selectedPlant, setSelectedPlant] = useState(null);
-    const [selectedHatchery, setSelectedHatchery] = useState(null);
 
     // Message State
     const [messageMode, setMessageMode] = useState('EMAIL'); // EMAIL, WHATSAPP
@@ -250,18 +245,6 @@ Details available in the portal.`
     const [date, setDate] = useState(new Date().toLocaleDateString('en-CA')); // YYYY-MM-DD format
     const [time, setTime] = useState(new Date().toTimeString().slice(0, 5)); // Current time HH:mm
 
-    useEffect(() => {
-        fetchPlants();
-    }, []);
-
-    useEffect(() => {
-        if (selectedPlant) {
-            fetchHatcheries(selectedPlant.id);
-        } else {
-            setHatcheries([]);
-            setSelectedHatchery(null);
-        }
-    }, [selectedPlant]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -274,25 +257,6 @@ Details available in the portal.`
         return () => clearTimeout(timer);
     }, [hodSearch]);
 
-    const fetchPlants = async () => {
-        try {
-            const data = await apiService.getPlants();
-            setPlants(Array.isArray(data) ? data : []);
-        } catch (error) {
-            console.error('Failed to fetch plants:', error);
-            setPlants([]);
-        }
-    };
-
-    const fetchHatcheries = async (plantId) => {
-        try {
-            const data = await apiService.getHatcheries(plantId);
-            setHatcheries(Array.isArray(data) ? data : []);
-        } catch (error) {
-            console.error('Failed to fetch hatcheries:', error);
-            setHatcheries([]);
-        }
-    };
 
     const searchHODs = async () => {
         try {
@@ -356,8 +320,6 @@ Details available in the portal.`
             setLoading(true);
             const payload = {
                 hod_id: selectedHOD?.id || null,
-                plant_id: selectedPlant?.id || null,
-                hatchery_id: selectedHatchery?.id || null,
                 send_via: messageMode,
                 send_to: formData.toAddress,
                 send_from: 'system', // Align with mobile 'system'

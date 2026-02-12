@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MdAccountCircle, MdFactory, MdEgg, MdChevronRight } from 'react-icons/md';
+import { MdAccountCircle, MdChevronRight } from 'react-icons/md';
 import { motion } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
 import { useEffect } from 'react';
@@ -22,20 +22,6 @@ const AdminDashboard = () => {
             icon: <MdAccountCircle size={28} />,
             gradient: 'from-indigo-500 to-blue-600',
             path: '/admin/hods',
-        },
-        {
-            title: 'Plant Management',
-            subtitle: 'Manage Factory Plant details',
-            icon: <MdFactory size={28} />,
-            gradient: 'from-emerald-500 to-teal-600',
-            path: '/admin/plants',
-        },
-        {
-            title: 'Hatchery Management',
-            subtitle: 'Configure Hatcheries & Links',
-            icon: <MdEgg size={28} />,
-            gradient: 'from-amber-500 to-orange-600',
-            path: '/admin/hatcheries',
         }
     ];
 

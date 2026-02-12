@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
     MdArrowBack, MdAccountCircle, MdSearch, MdClose,
     MdEmail, MdWhatsapp, MdCalendarToday, MdAccessTime,
-    MdSend, MdFactory
+    MdSend
 } from 'react-icons/md';
 import { motion, AnimatePresence } from 'framer-motion';
 import { apiService } from '../services/api';
@@ -23,11 +23,6 @@ const EditScheduler = () => {
     const [hodSuggestions, setHodSuggestions] = useState([]);
     const [searchingHods, setSearchingHods] = useState(false);
 
-    // Location State
-    const [plants, setPlants] = useState([]);
-    const [hatcheries, setHatcheries] = useState([]);
-    const [selectedPlant, setSelectedPlant] = useState(null);
-    const [selectedHatchery, setSelectedHatchery] = useState(null);
 
     // Message State
     const [messageMode, setMessageMode] = useState('EMAIL');
@@ -51,9 +46,6 @@ const EditScheduler = () => {
     useEffect(() => {
         const init = async () => {
             try {
-                // Fetch plants first to have references
-                const plantsData = await apiService.getPlants();
-                setPlants(Array.isArray(plantsData) ? plantsData : []);
 
                 // Fetch schedule details
                 const data = await apiService.getSchedules(); // Get all to find the one, or use a specific detail API if exists
@@ -103,19 +95,6 @@ const EditScheduler = () => {
                     }
                 }
 
-                if (item.plant_id) {
-                    const matchedPlant = Array.isArray(plantsData) ? plantsData.find(p => p.id == item.plant_id) : null;
-                    if (matchedPlant) {
-                        setSelectedPlant(matchedPlant);
-                        // Fetch hatcheries for this plant
-                        const hData = await apiService.getHatcheries(item.plant_id);
-                        setHatcheries(Array.isArray(hData) ? hData : []);
-                        if (item.hatchery_id) {
-                            const matchedHatchery = Array.isArray(hData) ? hData.find(h => h.id == item.hatchery_id) : null;
-                            setSelectedHatchery(matchedHatchery);
-                        }
-                    }
-                }
             } catch (error) {
                 console.error('Failed to load scheduler details:', error);
                 toast.error('Failed to load details');
@@ -126,24 +105,6 @@ const EditScheduler = () => {
         init();
     }, [id]);
 
-    useEffect(() => {
-        if (selectedPlant) {
-            // Fetch hatcheries for the newly selected plant
-            apiService.getHatcheries(selectedPlant.id)
-                .then(data => {
-                    setHatcheries(Array.isArray(data) ? data : []);
-                })
-                .catch(error => {
-                    console.error('Failed to fetch hatcheries:', error);
-                    setHatcheries([]);
-                });
-            // Clear selected hatchery when plant changes
-            setSelectedHatchery(null);
-        } else {
-            setHatcheries([]);
-            setSelectedHatchery(null);
-        }
-    }, [selectedPlant]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -195,8 +156,6 @@ const EditScheduler = () => {
             setSaving(true);
             const payload = {
                 hod_id: selectedHOD?.id || null,
-                plant_id: selectedPlant?.id || null,
-                hatchery_id: selectedHatchery?.id || null,
                 send_via: messageMode,
                 send_to: formData.toAddress,
                 send_from: 'system',
@@ -328,49 +287,6 @@ const EditScheduler = () => {
                     </Section>
 
                     {/* Reuse Section, Location, Content, Timing from AddScheduler with updated states */}
-                    <Section title="Location" icon={<MdFactory />}>
-                        <div className="space-y-6">
-                            <div className="space-y-3">
-                                <p className="text-xs font-black text-slate-600 uppercase tracking-widest ml-2">Plant Selection</p>
-                                <div className="flex flex-wrap gap-2">
-                                    {Array.isArray(plants) && plants.map(p => (
-                                        <button
-                                            key={p.id}
-                                            onClick={() => setSelectedPlant(selectedPlant?.id === p.id ? null : p)}
-                                            className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest border transition-all ${selectedPlant?.id === p.id
-                                                ? 'bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/20'
-                                                : 'bg-slate-900 border-white/5 text-slate-500'
-                                                }`}
-                                        >
-                                            {p.plant_name}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {selectedPlant && (
-                                <div className="space-y-3">
-                                    <p className="text-xs font-black text-slate-600 uppercase tracking-widest ml-2">Hatchery Assignment</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {(Array.isArray(hatcheries) && hatcheries.length > 0) ? hatcheries.map(h => (
-                                            <button
-                                                key={h.id}
-                                                onClick={() => setSelectedHatchery(selectedHatchery?.id === h.id ? null : h)}
-                                                className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest border transition-all ${selectedHatchery?.id === h.id
-                                                    ? 'bg-amber-500 border-amber-400 text-white shadow-lg shadow-amber-500/20'
-                                                    : 'bg-slate-900 border-white/5 text-slate-500'
-                                                    }`}
-                                            >
-                                                {h.hatchery_name}
-                                            </button>
-                                        )) : (
-                                            <p className="text-slate-700 font-bold italic text-[10px]">No hatcheries linked to this plant</p>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </Section>
 
                     <Section title="Message Details" icon={<MdSend />}>
                         <div className="space-y-6">
