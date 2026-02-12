@@ -14,7 +14,6 @@ import {
     MdDelete,
     MdRefresh,
     MdPushPin,
-    MdNotificationsActive
 } from 'react-icons/md';
 import { useAppContext } from '../context/AppContext';
 import toast, { Toaster } from 'react-hot-toast';
@@ -270,19 +269,6 @@ const Dashboard = () => {
                                 <span className="text-white font-black text-[9px] uppercase tracking-tighter whitespace-nowrap">{streak}-Day Streak</span>
                             </div>
 
-                            <button
-                                onClick={() => {
-                                    const testTask = { id: 'test', title: '🔔 Test Alert', dueTime: 'Now' };
-                                    // We need to trigger it in TaskAlertManager, but for now we'll just toast
-                                    toast.success('Triggering Test Alert...', { icon: '🚀' });
-                                    // Force trigger the alarm function if possible, or just mock it here
-                                    window.dispatchEvent(new CustomEvent('TRIGGER_TEST_ALARM'));
-                                }}
-                                className="w-9 h-9 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 hover:bg-blue-500/30 transition-all shrink-0"
-                                title="Test Alert"
-                            >
-                                <MdNotificationsActive size={18} />
-                            </button>
 
                             <button
                                 onClick={() => setShowLogoutConfirm(true)}
