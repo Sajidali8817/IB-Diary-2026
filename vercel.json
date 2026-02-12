@@ -1,11 +1,11 @@
 {
     "rewrites": [
         {
-            "source": "/api/:match*",
-            "destination": "https://ibnotes.abisexport.com/:match*"
+            "source": "/api/(.*)",
+            "destination": "https://ibnotes.abisexport.com/$1"
         },
         {
-            "source": "/((?!api).*)",
+            "source": "/((?!api/).*)",
             "destination": "/index.html"
         }
     ]

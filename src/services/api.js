@@ -208,8 +208,8 @@ export const apiService = {
     deleteHatchery: (id) => apiRequest(`/master/hatchery/${id}`, 'DELETE'),
 
     // Scheduler
-    scheduleMessage: (data) => apiRequest('/scheduler/', 'POST', data),
-    getSchedules: (status = null) => apiRequest(`/scheduler/${status && status !== 'ALL' ? `?status=${status}` : ''}`),
+    scheduleMessage: (data) => apiRequest('/scheduler', 'POST', data),
+    getSchedules: (status = null) => apiRequest(`/scheduler${status && status !== 'ALL' ? `?status=${status}` : ''}`),
     getSchedulerStats: () => apiRequest('/scheduler/my-schedulers/stats'),
     updateSchedule: (id, data) => apiRequest(`/scheduler/${id}`, 'PUT', data),
     deleteSchedule: (id) => apiRequest(`/scheduler/${id}`, 'DELETE'),
