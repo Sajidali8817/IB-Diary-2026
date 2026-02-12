@@ -231,11 +231,18 @@ const TaskAlertManager = () => {
         });
 
         // 3. System Notification
-        if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification('⏰ Task Alarm', {
-                body: `It's time for: ${task.title}`,
-                icon: '/pwa-192x192.png',
-                requireInteraction: true
+        if ('serviceWorker' in navigator && Notification.permission === 'granted') {
+            navigator.serviceWorker.ready.then(registration => {
+                registration.showNotification('⏰ Task Alarm!', {
+                    body: `It's time for: ${task.title}`,
+                    icon: '/pwa-192x192.png',
+                    badge: '/pwa-192x192.png',
+                    tag: `task-${task.id}`,
+                    renotify: true,
+                    requireInteraction: true,
+                    vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 500],
+                    data: { taskId: task.id }
+                });
             });
         }
     };

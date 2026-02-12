@@ -37,13 +37,17 @@ setInterval(() => {
             if (h === currentHours && m === currentMinutes) {
                 // Only show if we haven't shown it recently (simple dedup needed?)
                 // Better: reliance on `tag` to prevent duplicates
-                self.registration.showNotification('Task Reminder', {
-                    body: `It's time for: ${task.title}`,
+                self.registration.showNotification('⏰ Task Alarm!', {
+                    body: `It's time: ${task.title}`,
                     icon: '/pwa-192x192.png',
-                    tag: `task-${task.id}-${task.dueTime}`, // Prevents duplicate notifications
-                    renotify: true,
-                    requireInteraction: true,
-                    vibrate: [200, 100, 200]
+                    badge: '/pwa-192x192.png',
+                    tag: `task-${task.id}`, // Unique per task
+                    renotify: true, // Vibrate/alert even if notification is already showing
+                    requireInteraction: true, // Keeps it on screen until user acts
+                    vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 500],
+                    data: {
+                        url: '/'
+                    }
                 });
             }
         }
