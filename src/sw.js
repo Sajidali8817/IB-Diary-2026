@@ -10,11 +10,50 @@ clientsClaim();
 
 let tasks = [];
 
+// --- IndexedDB Helper ---
+const DB_NAME = 'ib-diary-sw-db';
+const STORE_NAME = 'tasks-store';
+
+const getTasksFromDB = () => {
+    return new Promise((resolve) => {
+        const request = indexedDB.open(DB_NAME, 1);
+        request.onupgradeneeded = (e) => {
+            e.target.result.createObjectStore(STORE_NAME);
+        };
+        request.onsuccess = (e) => {
+            const db = e.target.result;
+            const tx = db.transaction(STORE_NAME, 'readonly');
+            const store = tx.objectStore(STORE_NAME);
+            const getReq = store.get('current-tasks');
+            getReq.onsuccess = () => resolve(getReq.result || []);
+            getReq.onerror = () => resolve([]);
+        };
+        request.onerror = () => resolve([]);
+    });
+};
+
+const saveTasksToDB = (newTasks) => {
+    const request = indexedDB.open(DB_NAME, 1);
+    request.onsuccess = (e) => {
+        const db = e.target.result;
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const store = tx.objectStore(STORE_NAME);
+        store.put(newTasks, 'current-tasks');
+    };
+};
+
+// Load tasks on startup
+getTasksFromDB().then(res => {
+    tasks = res;
+    console.log('SW: Tasks loaded from DB', tasks.length);
+});
+
 // Listen for messages from the main thread
 self.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'UPDATE_TASKS') {
         tasks = event.data.tasks;
-        console.log('SW: Tasks updated', tasks.length);
+        saveTasksToDB(tasks);
+        console.log('SW: Tasks updated and saved', tasks.length);
     }
 });
 
