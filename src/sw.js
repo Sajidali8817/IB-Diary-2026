@@ -41,26 +41,45 @@ setInterval(() => {
                     body: `It's time: ${task.title}`,
                     icon: '/pwa-192x192.png',
                     badge: '/pwa-192x192.png',
-                    tag: `task-${task.id}`, // Unique per task
-                    renotify: true, // Vibrate/alert even if notification is already showing
-                    requireInteraction: true, // Keeps it on screen until user acts
+                    tag: `task-${task.id}`,
+                    renotify: true,
+                    requireInteraction: true,
                     vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 500],
                     data: {
-                        url: '/'
-                    }
+                        taskId: task.id,
+                        title: task.title
+                    },
+                    actions: [
+                        { action: 'open', title: '📂 Open Diary' },
+                        { action: 'stop', title: '🛑 Stop Alert' }
+                    ]
                 });
             }
         }
     });
 }, 10000);
+
 // Handle notification clicks
 self.addEventListener('notificationclick', (event) => {
-    event.notification.close();
+    const notification = event.notification;
+    const action = event.action;
 
-    // Focus or open the app window
+    notification.close();
+
+    if (action === 'stop') {
+        // Just close the notification (we could sync state back but close is primary)
+        return;
+    }
+
+    // Default or "open" action: Focus or open the app window
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
             if (windowClients.length > 0) {
+                // Send message to the app to trigger alarm sound even if it was just focused
+                windowClients[0].postMessage({
+                    type: 'NOTIFICATION_OPENED',
+                    taskId: notification.data?.taskId
+                });
                 return windowClients[0].focus();
             }
             if (clients.openWindow) {

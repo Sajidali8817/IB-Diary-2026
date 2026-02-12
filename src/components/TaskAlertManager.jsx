@@ -107,8 +107,28 @@ const TaskAlertManager = () => {
         };
         window.addEventListener('TRIGGER_TEST_ALARM', handleTestTrigger);
 
+        // Listen for messages from Service Worker (Notification Click)
+        const handleSWMessage = (event) => {
+            if (event.data && event.data.type === 'NOTIFICATION_OPENED') {
+                console.log('📬 Notification opened via SW. Enabling audio...');
+                // Playing a silent sound briefly to unlock if not already,
+                // or just trigger the alarm if we have the task data.
+                if (audioRef.current) {
+                    audioRef.current.play().then(() => {
+                        setAudioUnlocked(true);
+                    }).catch(e => console.warn('SW Focus play failed', e));
+                }
+            }
+        };
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', handleSWMessage);
+        }
+
         return () => {
             window.removeEventListener('TRIGGER_TEST_ALARM', handleTestTrigger);
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.removeEventListener('message', handleSWMessage);
+            }
         };
     }, []);
     const stopAlarm = () => {
@@ -252,7 +272,11 @@ const TaskAlertManager = () => {
                     renotify: true,
                     requireInteraction: true,
                     vibrate: [500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 500],
-                    data: { taskId: task.id }
+                    data: { taskId: task.id },
+                    actions: [
+                        { action: 'open', title: '📂 Open Diary' },
+                        { action: 'stop', title: '🛑 Stop Alert' }
+                    ]
                 }).then(() => {
                     console.log('✅ System Notification shown successfully');
                 }).catch(err => {
