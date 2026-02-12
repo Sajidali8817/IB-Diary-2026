@@ -131,7 +131,7 @@ const TaskAlertManager = () => {
             }
         };
     }, []);
-    const stopAlarm = () => {
+    const stopAlarm = (taskId = null) => {
         if (audioRef.current) {
             audioRef.current.pause();
             audioRef.current.currentTime = 0;
@@ -140,6 +140,9 @@ const TaskAlertManager = () => {
         if (alarmTimeoutRef.current) {
             clearTimeout(alarmTimeoutRef.current);
             alarmTimeoutRef.current = null;
+        }
+        if (taskId) {
+            toast.dismiss(`alarm-${taskId}`);
         }
     };
 
@@ -203,7 +206,7 @@ const TaskAlertManager = () => {
                     // Auto-stop after 1 minute (60,000 ms)
                     if (alarmTimeoutRef.current) clearTimeout(alarmTimeoutRef.current);
                     alarmTimeoutRef.current = setTimeout(() => {
-                        stopAlarm();
+                        stopAlarm(task.id);
                     }, 60000);
                 })
                 .catch(e => {
@@ -244,8 +247,7 @@ const TaskAlertManager = () => {
                 <div className="flex border-t border-white/10">
                     <button
                         onClick={() => {
-                            stopAlarm();
-                            toast.dismiss(t.id);
+                            stopAlarm(task.id);
                         }}
                         className="w-full rounded-b-2xl p-4 flex items-center justify-center gap-2 text-sm font-black uppercase tracking-widest text-white bg-red-600 hover:bg-red-700 transition-colors"
                     >
