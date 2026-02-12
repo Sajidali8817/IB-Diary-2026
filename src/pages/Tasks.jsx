@@ -1,0 +1,499 @@
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { MdChevronLeft, MdChevronRight, MdAdd, MdCheck, MdEdit, MdDelete, MdRefresh, MdExpandMore, MdExpandLess, MdEmail, MdCall, MdGroups, MdBarChart, MdSchedule, MdAssignment, MdPushPin } from 'react-icons/md';
+import { useAppContext } from '../context/AppContext';
+import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
+import AddTaskModal from '../components/AddTaskModal';
+import ConfirmModal from '../components/ConfirmModal';
+
+const PRIORITY_COLORS = {
+    high: '#EF4444',
+    medium: '#F59E0B',
+    low: '#10B981',
+};
+
+const CATEGORY_ICONS = {
+    email: <MdEmail />,
+    call: <MdCall />,
+    meeting: <MdGroups />,
+    general: <MdAssignment />,
+    reports: <MdBarChart />,
+    followup: <MdSchedule />,
+};
+
+const hexToRgba = (hex, alpha) => {
+    if (!hex) return 'transparent';
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
+const isSameDay = (d1, d2) => {
+    if (!d1 || !d2 || isNaN(d1) || isNaN(d2)) return false;
+    return d1.getDate() === d2.getDate() &&
+        d1.getMonth() === d2.getMonth() &&
+        d1.getFullYear() === d2.getFullYear();
+};
+
+const Tasks = () => {
+    const navigate = useNavigate();
+    const { tasks, toggleTaskCompletion, addTask, updateTask, deleteTask, refreshTasks, toggleTaskPin } = useAppContext();
+
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [calendarVisible, setCalendarVisible] = useState(false);
+    const [calendarMonth, setCalendarMonth] = useState(new Date());
+    const [expandedTaskId, setExpandedTaskId] = useState(null);
+    const [addModalVisible, setAddModalVisible] = useState(false);
+    const [editModalVisible, setEditModalVisible] = useState(false);
+    const [taskToEdit, setTaskToEdit] = useState(null);
+    const [remarkModalVisible, setRemarkModalVisible] = useState(false);
+    const [taskToComplete, setTaskToComplete] = useState(null);
+    const [completionRemark, setCompletionRemark] = useState('');
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [taskToDelete, setTaskToDelete] = useState(null);
+    const activeDateRef = useRef(null);
+
+    useEffect(() => {
+        refreshTasks();
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('add') === 'true') {
+            setAddModalVisible(true);
+            window.history.replaceState({}, '', window.location.pathname);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (activeDateRef.current) {
+            activeDateRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
+        }
+    }, [selectedDate, calendarVisible]);
+
+    const filteredTasks = useMemo(() => {
+        return tasks
+            .filter(task => {
+                if (!task.dueDate) return false;
+                const taskDate = new Date(task.dueDate);
+                if (isNaN(taskDate)) return false;
+                return isSameDay(taskDate, selectedDate);
+            })
+            .sort((a, b) => {
+                if (a.isPinned && !b.isPinned) return -1;
+                if (!a.isPinned && b.isPinned) return 1;
+                if (a.dueTime && b.dueTime) return a.dueTime.localeCompare(b.dueTime);
+                return 0;
+            });
+    }, [tasks, selectedDate]);
+
+    const getDateStatus = (date) => {
+        if (!date) return null;
+        const dayTasks = tasks.filter(t => t.dueDate && isSameDay(new Date(t.dueDate), date));
+        if (dayTasks.length === 0) return null;
+        const hasPending = dayTasks.some(t => !t.completed);
+        const allCompleted = dayTasks.every(t => t.completed);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const checkDate = new Date(date);
+        checkDate.setHours(0, 0, 0, 0);
+        if (checkDate > today) return 'yellow';
+        return hasPending ? 'red' : 'green';
+    };
+
+    const getDotColor = (status) => {
+        switch (status) {
+            case 'yellow': return '#FFC107';
+            case 'green': return '#10B981';
+            case 'red': return '#EF4444';
+            default: return 'transparent';
+        }
+    };
+
+    const getDaysInMonth = (month) => {
+        const date = new Date(month.getFullYear(), month.getMonth(), 1);
+        const days = [];
+        const firstDayIndex = date.getDay();
+        for (let i = 0; i < firstDayIndex; i++) days.push(null);
+        while (date.getMonth() === month.getMonth()) {
+            days.push(new Date(date));
+            date.setDate(date.getDate() + 1);
+        }
+        return days;
+    };
+
+    const changeMonth = (increment) => {
+        const newMonth = new Date(calendarMonth);
+        newMonth.setMonth(newMonth.getMonth() + increment);
+        setCalendarMonth(newMonth);
+    };
+
+    const handleDateSelect = (date) => {
+        setSelectedDate(date);
+        setCalendarVisible(false);
+    };
+
+    const handleCompletionPress = (taskId) => {
+        const task = tasks.find(t => t.id === taskId);
+        if (!task) return;
+        if (!task.completed) {
+            setTaskToComplete(taskId);
+            setRemarkModalVisible(true);
+        } else {
+            toggleTaskCompletion(taskId);
+            toast.success('Task marked as pending');
+        }
+    };
+
+    const confirmCompletion = () => {
+        if (taskToComplete) {
+            toggleTaskCompletion(taskToComplete, completionRemark);
+            toast.success('Task completed!');
+            setTaskToComplete(null);
+            setCompletionRemark('');
+        }
+        setRemarkModalVisible(false);
+    };
+
+    const handleEdit = (task) => {
+        setTaskToEdit(task);
+        setEditModalVisible(true);
+    };
+
+    function handleDelete(taskId) {
+        setTaskToDelete(taskId);
+        setShowDeleteConfirm(true);
+    }
+
+    function handleConfirmDelete() {
+        if (taskToDelete) {
+            deleteTask(taskToDelete);
+            toast.success('Task deleted');
+            setTaskToDelete(null);
+        }
+        setShowDeleteConfirm(false);
+    }
+
+    const stripDates = useMemo(() => {
+        const dates = [];
+        for (let i = -15; i <= 15; i++) {
+            const date = new Date(selectedDate);
+            date.setDate(selectedDate.getDate() + i);
+            dates.push(date);
+        }
+        return dates;
+    }, [selectedDate]);
+
+    const renderCalendar = () => {
+        if (!calendarVisible) return null;
+        const days = getDaysInMonth(calendarMonth);
+        const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+
+        return (
+            <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="bg-slate-900/50 backdrop-blur-xl rounded-[2rem] p-6 border border-white/5 mb-8 shadow-2xl"
+            >
+                <div className="flex justify-between items-center mb-6">
+                    <button onClick={() => changeMonth(-1)} className="p-3 bg-slate-800 rounded-xl hover:bg-slate-700 transition-colors">
+                        <MdChevronLeft size={24} className="text-blue-400" />
+                    </button>
+                    <h3 className="text-xl font-black text-white font-outfit uppercase tracking-tighter">
+                        {calendarMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                    </h3>
+                    <button onClick={() => changeMonth(1)} className="p-3 bg-slate-800 rounded-xl hover:bg-slate-700 transition-colors">
+                        <MdChevronRight size={24} className="text-blue-400" />
+                    </button>
+                </div>
+
+                <div className="grid grid-cols-7 gap-2 mb-2">
+                    {weekDays.map((d, i) => (
+                        <div key={i} className="text-center text-slate-500 font-black text-[10px] uppercase tracking-widest">{d}</div>
+                    ))}
+                </div>
+
+                <div className="grid grid-cols-7 gap-2">
+                    {days.map((day, index) => {
+                        if (!day) return <div key={`empty-${index}`} className="h-10" />;
+                        const isSelected = isSameDay(day, selectedDate);
+                        const isToday = isSameDay(day, new Date());
+                        const status = getDateStatus(day);
+                        const dotColor = getDotColor(status);
+
+                        return (
+                            <button
+                                key={day.toString()}
+                                onClick={() => handleDateSelect(day)}
+                                className={`h-11 rounded-xl flex flex-col items-center justify-center transition-all ${isSelected
+                                    ? 'bg-blue-600 text-white font-black shadow-lg shadow-blue-600/30'
+                                    : isToday
+                                        ? 'bg-blue-500/10 text-blue-400 font-black border border-blue-500/20'
+                                        : 'bg-slate-800/40 text-slate-300 hover:bg-slate-800'
+                                    }`}
+                            >
+                                <span className="text-sm font-bold">{day.getDate()}</span>
+                                {status && (
+                                    <div
+                                        className="w-1.5 h-1.5 rounded-full mt-1"
+                                        style={{ backgroundColor: dotColor }}
+                                    />
+                                )}
+                            </button>
+                        );
+                    })}
+                </div>
+            </motion.div>
+        );
+    };
+
+    const TaskItem = ({ task }) => {
+        const isCompleted = task.completed;
+        const [isExpanded, setIsExpanded] = useState(false);
+
+        let isOverdue = false;
+        if (!isCompleted && task.dueDate) {
+            const due = new Date(task.dueDate);
+            if (task.dueTime) {
+                const [h, m] = task.dueTime.split(':');
+                due.setHours(parseInt(h), parseInt(m));
+            } else {
+                due.setHours(23, 59, 59);
+            }
+            if (new Date() > due) isOverdue = true;
+        }
+
+        const borderColor = isCompleted ? '#10B981' : (isOverdue ? '#EF4444' : '#3B82F6');
+        const priorityColor = PRIORITY_COLORS[task.priority] || '#3B82F6';
+
+        let timeDisplay = "All Day";
+        if (task.dueTime) {
+            const [hours, mins] = task.dueTime.split(':');
+            const d = new Date();
+            d.setHours(parseInt(hours), parseInt(mins));
+            timeDisplay = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+        }
+
+        const handlePinClick = (e) => {
+            e.stopPropagation();
+            toggleTaskPin(task.id);
+        };
+
+        return (
+            <motion.div layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex gap-6 mb-8 group">
+                <div className="flex flex-col items-center min-w-[70px] pt-1">
+                    <span className={`text-sm font-black tracking-tight ${isOverdue && !isCompleted ? 'text-red-500' : 'text-slate-400'}`}>
+                        {timeDisplay.split(' ')[0]}
+                    </span>
+                    <span className="text-[10px] font-black text-slate-600 mt-1 uppercase tracking-widest">
+                        {timeDisplay.split(' ')[1]}
+                    </span>
+                    <div className={`w-[2px] mt-4 rounded-full flex-1 min-h-[50px] ${isOverdue && !isCompleted ? 'bg-red-500/20' : 'bg-slate-800/50'}`} />
+                </div>
+
+                <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    className={`flex-1 bg-slate-900/40 backdrop-blur-xl rounded-[2.5rem] border-2 p-6 transition-all shadow-2xl relative overflow-hidden`}
+                    style={{ borderColor: task.isPinned ? '#F59E0B' : hexToRgba(borderColor, 0.3) }}
+                >
+                    {task.isPinned && (
+                        <div className="absolute top-0 right-0 p-2">
+                            <div className="w-12 h-12 bg-amber-500/10 blur-xl rounded-full pointer-events-none"></div>
+                        </div>
+                    )}
+                    <div className="cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-2xl bg-slate-950 flex items-center justify-center text-2xl text-blue-500 shadow-inner">
+                                    {CATEGORY_ICONS[task.category?.toLowerCase()] || CATEGORY_ICONS.general}
+                                </div>
+                                <div>
+                                    <h3 className={`text-lg font-black leading-tight ${isCompleted ? 'line-through text-slate-600' : 'text-white'}`}>
+                                        {task.title}
+                                    </h3>
+                                    <div className="flex gap-2 mt-2">
+                                        {task.priority && (
+                                            <span className="px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-widest" style={{ backgroundColor: hexToRgba(priorityColor, 0.1), color: priorityColor, border: `1px solid ${hexToRgba(priorityColor, 0.2)}` }}>
+                                                {task.priority}
+                                            </span>
+                                        )}
+                                        <span className="px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-widest bg-slate-800 text-slate-500 border border-white/5">
+                                            {task.category}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${isCompleted ? 'bg-emerald-500 border-emerald-500 text-slate-950' : 'border-slate-700 text-transparent'}`}>
+                                <MdCheck size={14} />
+                            </div>
+                        </div>
+
+                        {task.description && (
+                            <p className={`text-sm font-black text-slate-500 mt-4 leading-relaxed ${!isExpanded && 'line-clamp-1'}`}>
+                                {task.description}
+                            </p>
+                        )}
+                    </div>
+
+                    <AnimatePresence>
+                        {isExpanded && (
+                            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="mt-6 pt-6 border-t border-white/5 flex gap-3">
+                                <button onClick={() => handleCompletionPress(task.id)} className={`flex-1 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${isCompleted ? 'bg-slate-800 text-slate-400' : 'bg-emerald-500 text-white'}`}>
+                                    {isCompleted ? <MdRefresh size={16} /> : <MdCheck size={16} />}
+                                    {isCompleted ? 'Redo' : 'Complete'}
+                                </button>
+                                <button onClick={() => handleEdit(task)} className="bg-slate-800 text-blue-400 p-3 rounded-2xl border border-white/5 hover:bg-slate-700 transition-all">
+                                    <MdEdit size={20} />
+                                </button>
+                                <button onClick={() => handleDelete(task.id)} className="bg-slate-800 text-red-500 p-3 rounded-2xl border border-white/5 hover:bg-red-500/10 transition-all">
+                                    <MdDelete size={20} />
+                                </button>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </motion.div >
+            </motion.div >
+        );
+    };
+
+    return (
+        <div className="min-h-screen bg-slate-950 pb-24 relative">
+            {/* Header Section */}
+            <div className="bg-slate-900/80 backdrop-blur-xl sticky top-0 z-30 border-b border-white/5">
+                <header className="flex justify-between items-center p-6">
+                    <button
+                        onClick={() => setCalendarVisible(!calendarVisible)}
+                        className="group text-left"
+                    >
+                        <h1 className="text-2xl font-black text-white font-outfit leading-none tracking-tight">
+                            {isSameDay(selectedDate, new Date()) ? "Today" : selectedDate.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric' })}
+                        </h1>
+                        <div className="flex items-center gap-2 mt-1">
+                            <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest group-hover:text-blue-500 transition-colors">
+                                {selectedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                            </span>
+                            {calendarVisible ? <MdExpandLess className="text-blue-500" /> : <MdExpandMore className="text-slate-500 group-hover:text-blue-500" />}
+                        </div>
+                    </button>
+
+                </header>
+            </div>
+
+            <div className="p-6">
+                {/* Calendar Dropdown */}
+                <AnimatePresence>
+                    {calendarVisible && renderCalendar()}
+                </AnimatePresence>
+
+                {/* Date Strip */}
+                {!calendarVisible && (
+                    <div className="mb-10 overflow-x-auto no-scrollbar pt-2 pb-4">
+                        <div className="flex gap-3">
+                            {stripDates.map((date, idx) => {
+                                const isSelected = isSameDay(date, selectedDate);
+                                return (
+                                    <button
+                                        key={idx}
+                                        ref={isSelected ? activeDateRef : null}
+                                        onClick={() => setSelectedDate(date)}
+                                        className={`flex flex-col items-center justify-center min-w-[64px] h-20 rounded-3xl transition-all ${isSelected
+                                            ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/30 font-black'
+                                            : 'bg-slate-900/40 text-slate-500 hover:text-slate-300 border border-white/5'
+                                            }`}
+                                    >
+                                        <span className="text-[10px] font-black uppercase tracking-widest mb-1">{date.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                                        <span className="text-xl font-black font-outfit">{date.getDate()}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
+
+                {/* Task List */}
+                <div className="space-y-2">
+                    <AnimatePresence mode="popLayout">
+                        {filteredTasks.length > 0 ? (
+                            filteredTasks.map(task => <TaskItem key={task.id} task={task} />)
+                        ) : (
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className=" text-center">
+                                <div className="w-24 h-24 bg-slate-900 flex items-center justify-center rounded-[2.5rem] mx-auto mb-8 border border-white/5 shadow-2xl">
+                                    <MdAssignment size={40} className="text-slate-700" />
+                                </div>
+                                <h3 className="text-2xl font-black text-white font-outfit uppercase tracking-tighter">No tasks found</h3>
+                                <p className="text-slate-500 font-bold mt-2">Ready to plan your day?</p>
+                                <button
+                                    onClick={() => setAddModalVisible(true)}
+                                    className="mt-10 px-10 py-4 bg-blue-600 text-white rounded-[1.5rem] font-black uppercase tracking-widest text-xs shadow-xl shadow-blue-600/20 active:scale-95 transition-all"
+                                >
+                                    Create New Task
+                                </button>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            </div>
+
+            {/* Modals */}
+            <AddTaskModal
+                visible={addModalVisible || editModalVisible}
+                onClose={() => { setAddModalVisible(false); setEditModalVisible(false); setTaskToEdit(null); }}
+                onAdd={async (taskData) => await addTask(taskData)}
+                onUpdate={async (id, updates) => await updateTask(id, updates)}
+                initialDate={selectedDate}
+                taskToEdit={taskToEdit}
+            />
+
+            <AnimatePresence>
+                {remarkModalVisible && (
+                    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-6">
+                        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="bg-slate-900 border border-white/10 rounded-[2.5rem] w-full max-w-md p-8 shadow-3xl">
+                            <h2 className="text-2xl font-black text-white font-outfit mb-2">Complete Task</h2>
+                            <p className="text-slate-500 font-bold text-sm mb-8 uppercase tracking-widest">Add a completion note</p>
+                            <textarea
+                                value={completionRemark}
+                                onChange={(e) => setCompletionRemark(e.target.value)}
+                                placeholder="What did you accomplish?"
+                                className="w-full bg-slate-950 text-white rounded-[1.5rem] p-5 mb-8 border border-white/5 focus:border-blue-500 outline-none resize-none font-bold"
+                                rows={4}
+                            />
+                            <div className="flex gap-4">
+                                <button onClick={() => { setRemarkModalVisible(false); setTaskToComplete(null); setCompletionRemark(''); }} className="flex-1 py-5 bg-slate-800 text-white rounded-3xl font-black uppercase tracking-widest text-[10px]">Cancel</button>
+                                <button onClick={confirmCompletion} className="flex-1 py-5 bg-emerald-500 text-white rounded-3xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-emerald-500/20">Complete</button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+            {/* Floating Add Button */}
+            {!addModalVisible && !editModalVisible && (
+                <div className="fixed bottom-24 right-6 z-[100]">
+                    <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => setAddModalVisible(true)}
+                        className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-2xl shadow-blue-500/40 cursor-pointer"
+                    >
+                        <MdAdd size={36} />
+                    </motion.button>
+                </div>
+            )}
+
+            <ConfirmModal
+                isOpen={showDeleteConfirm}
+                onClose={() => setShowDeleteConfirm(false)}
+                onConfirm={handleConfirmDelete}
+                title="Delete Task?"
+                message="Are you sure you want to delete this task? This action cannot be undone."
+                confirmText="Delete Task"
+            />
+        </div>
+    );
+};
+
+export default Tasks;
