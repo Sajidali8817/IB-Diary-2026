@@ -1,0 +1,24 @@
+{
+    "rewrites": [
+        {
+            "source": "/auth/:match*",
+            "destination": "https://ibnotes.abisexport.com/auth/:match*"
+        },
+        {
+            "source": "/user-data/:match*",
+            "destination": "https://ibnotes.abisexport.com/user-data/:match*"
+        },
+        {
+            "source": "/scheduler/:match*",
+            "destination": "https://ibnotes.abisexport.com/scheduler/:match*"
+        },
+        {
+            "source": "/chat/:match*",
+            "destination": "https://ibnotes.abisexport.com/chat/:match*"
+        },
+        {
+            "source": "/master/:match*",
+            "destination": "https://ibnotes.abisexport.com/master/:match*"
+        }
+    ]
+}
