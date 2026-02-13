@@ -38,13 +38,13 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
     // ... (existing effects and handles)
 
     return (
-        <div className={`flex flex-col h-full relative ${isFocused ? 'pb-20 sm:pb-0' : ''}`}>
+        <div className="flex flex-col h-full relative">
             {/* Toolbar */}
             <div className={`
-                flex items-center gap-1 p-1 bg-slate-900/90 backdrop-blur-xl border border-white/10 z-[100] overflow-x-auto no-scrollbar whitespace-nowrap scroll-smooth transition-all duration-300
+                flex items-center gap-1 p-1 bg-slate-800/95 backdrop-blur-2xl border border-white/10 z-[100] transition-all duration-300
                 ${isFocused ?
-                    'fixed bottom-0 left-0 right-0 w-full rounded-none px-4 py-3 border-t border-white/20 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] sm:sticky sm:top-0 sm:bottom-auto sm:mb-4 sm:rounded-2xl sm:max-w-fit sm:w-auto sm:border sm:px-1' :
-                    'sticky top-0 mb-4 rounded-2xl max-w-fit'
+                    'fixed right-2 top-1/2 -translate-y-1/2 flex-col w-auto rounded-2xl px-2 py-4 shadow-2xl border-white/20 sm:sticky sm:top-0 sm:translate-y-0 sm:flex-row sm:mb-4 sm:rounded-2xl sm:max-w-fit sm:w-auto sm:border sm:px-1' :
+                    'sticky top-0 mb-4 rounded-2xl max-w-fit overflow-x-auto no-scrollbar whitespace-nowrap'
                 }
             `}>
                 <button
@@ -68,7 +68,9 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
                 >
                     <MdFormatUnderlined size={24} />
                 </button>
-                <div className="w-px h-6 bg-white/10 mx-1 flex-shrink-0" />
+
+                <div className={`bg-white/10 flex-shrink-0 ${isFocused ? 'w-full h-px my-1 sm:w-px sm:h-6 sm:mx-1' : 'w-px h-6 mx-1'}`} />
+
                 <button
                     onMouseDown={(e) => { e.preventDefault(); execCommand('insertUnorderedList'); }}
                     className="p-2.5 hover:bg-white/10 rounded-xl text-slate-300 hover:text-white transition-all flex-shrink-0 active:scale-95"
@@ -83,10 +85,11 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
                 >
                     <MdFormatListNumbered size={24} />
                 </button>
-                <div className="w-px h-6 bg-white/10 mx-1 flex-shrink-0" />
+
+                <div className={`bg-white/10 flex-shrink-0 ${isFocused ? 'w-full h-px my-1 sm:w-px sm:h-6 sm:mx-1' : 'w-px h-6 mx-1'}`} />
 
                 {/* Color Options */}
-                <div className="flex items-center gap-2 px-2 flex-shrink-0">
+                <div className={`flex items-center gap-2 flex-shrink-0 ${isFocused ? 'flex-col px-0 py-2 sm:flex-row sm:px-2 sm:py-0' : 'px-2'}`}>
                     {[
                         { color: '#ffffff', label: 'White' },
                         { color: '#3B82F6', label: 'Blue' },
@@ -113,10 +116,9 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
                 onInput={handleInput}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => {
-                    // Slight delay to allow toolbar clicks to register if not using onMouseDown
                     setTimeout(() => setIsFocused(false), 200);
                 }}
-                className="w-full bg-transparent text-slate-200 text-xl font-medium placeholder:text-slate-800 outline-none leading-relaxed transition-all min-h-[400px]"
+                className={`w-full bg-transparent text-slate-200 text-xl font-medium placeholder:text-slate-800 outline-none leading-relaxed transition-all min-h-[400px] ${isFocused ? 'pr-16 sm:pr-0' : ''}`}
                 data-placeholder={placeholder}
             />
 
