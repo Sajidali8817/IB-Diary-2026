@@ -252,25 +252,36 @@ const Notes = () => {
         setViewModalVisible(false);
     };
 
-    const handleShare = async (title, content) => {
+    const handleShare = async (title, content, noteDate = null) => {
         // Strip HTML tags for clean text sharing
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = content || '';
         const plainText = tempDiv.textContent || tempDiv.innerText || '';
 
+        const formattedDate = noteDate ? new Date(noteDate).toLocaleDateString('en-US', {
+            year: 'numeric', month: 'short', day: 'numeric'
+        }) : new Date().toLocaleDateString('en-US', {
+            year: 'numeric', month: 'short', day: 'numeric'
+        });
+
+        const sharedText = `📝 *${title || 'Untitled Note'}*\n` +
+            `📅 ${formattedDate}\n\n` +
+            `${plainText}\n\n` +
+            `---\n` +
+            `Shared via *IB Diary*`;
+
         const shareData = {
             title: title || 'Note',
-            text: plainText
+            text: sharedText
         };
 
         try {
-            if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+            if (navigator.share) {
                 await navigator.share(shareData);
             } else {
                 // Fallback to clipboard
-                const fullText = `${shareData.title}\n\n${shareData.text}`;
-                await navigator.clipboard.writeText(fullText);
-                toast.success('Note copied to clipboard');
+                await navigator.clipboard.writeText(sharedText);
+                toast.success('Note content copied to clipboard');
             }
         } catch (error) {
             if (error.name !== 'AbortError') {
@@ -454,8 +465,8 @@ const Notes = () => {
                             <MdEdit size={18} className="pointer-events-none" />
                         </button>
                         <button
-                            onClick={(e) => { e.stopPropagation(); handleShare(note.title, note.content); }}
-                            className={`p-1.5 rounded-full transition-all cursor-pointer text-slate-600 hover:text-blue-600 hover:bg-black/5`}
+                            onClick={(e) => { e.stopPropagation(); handleShare(note.title, note.content, note.date || note.created_at); }}
+                            className={`p-1.5 rounded-full transition-all cursor-pointer text-slate-400 hover:text-slate-900 hover:bg-black/5`}
                         >
                             <MdShare size={18} className="pointer-events-none" />
                         </button>
@@ -954,7 +965,7 @@ const Notes = () => {
                                         <MdLink size={26} />
                                     </button>
                                     <button
-                                        onClick={() => handleShare(noteTitle, noteContent)}
+                                        onClick={() => handleShare(noteTitle, noteContent, noteDate)}
                                         className="w-12 h-12 rounded-full flex items-center justify-center text-slate-900 hover:bg-black/5 active:scale-90 transition-all"
                                     >
                                         <MdShare size={26} />
@@ -1018,7 +1029,7 @@ const Notes = () => {
                                 <MdEdit size={20} />
                             </button>
                             <button
-                                onClick={() => handleShare(noteToView.title, noteToView.content)}
+                                onClick={() => handleShare(noteToView.title, noteToView.content, noteToView.date || noteToView.created_at)}
                                 className="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-full hover:bg-emerald-500 hover:text-white transition-all flex items-center justify-center shadow-lg shadow-emerald-500/10"
                                 title="Share"
                             >
