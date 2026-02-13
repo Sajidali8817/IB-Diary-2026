@@ -474,7 +474,7 @@ const Notes = () => {
                         )
                     )}
 
-                    <h3 className="text-xl font-black text-slate-900 mb-3 pr-36 leading-tight">
+                    <h3 className="text-xl font-black text-slate-900 mb-3 pr-14 leading-tight">
                         {note.title || 'Untitled'}
                     </h3>
 
