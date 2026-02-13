@@ -1009,7 +1009,7 @@ const Notes = () => {
                         </div>
 
                         {/* Fixed Footer Buttons */}
-                        <div className="flex justify-center gap-6 pt-4 border-t border-white/5 flex-shrink-0">
+                        <div className="flex justify-center gap-6 pt-4 pb-6 border-t border-white/5 flex-shrink-0">
                             <button
                                 onClick={() => openEditModal(noteToView)}
                                 className="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-full hover:bg-blue-500 hover:text-white transition-all flex items-center justify-center shadow-lg shadow-blue-500/10"
