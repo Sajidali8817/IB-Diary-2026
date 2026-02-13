@@ -90,11 +90,9 @@ const Tasks = () => {
                 return matchesDate && matchesCategory;
             })
             .sort((a, b) => {
-                if (a.isPinned && !b.isPinned) return -1;
-                if (!a.isPinned && b.isPinned) return 1;
-                const timeA = a.dueTime || "00:00";
-                const timeB = b.dueTime || "00:00";
-                return timeA.localeCompare(timeB);
+                const dateA = new Date(a.date || a.created_at || 0);
+                const dateB = new Date(b.date || b.created_at || 0);
+                return dateB - dateA; // Latest first
             });
     }, [tasks, selectedDate, selectedCategory]);
 
@@ -293,10 +291,6 @@ const Tasks = () => {
             timeDisplay = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
         }
 
-        const handlePinClick = (e) => {
-            e.stopPropagation();
-            toggleTaskPin(task.id);
-        };
 
         return (
             <motion.div layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex gap-2 sm:gap-4 md:gap-6 mb-8 group">
@@ -314,13 +308,8 @@ const Tasks = () => {
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                     className={`flex-1 bg-slate-900/40 backdrop-blur-xl rounded-[1.8rem] sm:rounded-[2.5rem] border-2 p-4 sm:p-6 transition-all shadow-2xl relative overflow-hidden`}
-                    style={{ borderColor: task.isPinned ? '#F59E0B' : hexToRgba(borderColor, 0.3) }}
+                    style={{ borderColor: hexToRgba(borderColor, 0.3) }}
                 >
-                    {task.isPinned && (
-                        <div className="absolute top-0 right-0 p-2">
-                            <div className="w-12 h-12 bg-amber-500/10 blur-xl rounded-full pointer-events-none"></div>
-                        </div>
-                    )}
                     <div className="cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
                         <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-4">
@@ -331,7 +320,7 @@ const Tasks = () => {
                                     <h3 className={`text-lg font-black leading-tight ${isCompleted ? 'line-through text-slate-600' : 'text-white'}`}>
                                         {task.title}
                                     </h3>
-                                    <div className="flex gap-2 mt-2">
+                                    <div className="flex flex-wrap gap-2 mt-2">
                                         {task.priority && (
                                             <span className="px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-widest" style={{ backgroundColor: hexToRgba(priorityColor, 0.1), color: priorityColor, border: `1px solid ${hexToRgba(priorityColor, 0.2)}` }}>
                                                 {task.priority}
@@ -343,31 +332,42 @@ const Tasks = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${isCompleted ? 'bg-emerald-500 border-emerald-500 text-slate-950' : 'border-slate-700 text-transparent'}`}>
-                                <MdCheck size={14} />
-                            </div>
+                            <motion.div
+                                animate={{ rotate: isExpanded ? 180 : 0 }}
+                                className="text-slate-600 group-hover:text-blue-500 transition-colors p-1.5 rounded-full hover:bg-white/5"
+                            >
+                                <MdExpandMore size={24} />
+                            </motion.div>
                         </div>
-
-                        {task.description && (
-                            <p className={`text-sm font-black text-slate-500 mt-4 leading-relaxed ${!isExpanded && 'line-clamp-1'}`}>
-                                {task.description}
-                            </p>
-                        )}
                     </div>
+
+                    {/* Created Date - Bottom Right */}
+                    {(task.date || task.created_at) && (
+                        <div className="absolute bottom-3 right-5 text-[9px] font-black text-slate-500 pointer-events-none">
+                            Created: {new Date(task.date || task.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}
+                        </div>
+                    )}
 
                     <AnimatePresence>
                         {isExpanded && (
-                            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="mt-6 pt-6 border-t border-white/5 flex gap-3">
-                                <button onClick={() => handleCompletionPress(task.id)} className={`flex-1 py-3 px-2 rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest flex items-center justify-center gap-1 sm:gap-2 transition-all ${isCompleted ? 'bg-slate-800 text-slate-400' : 'bg-emerald-500 text-white'}`}>
-                                    {isCompleted ? <MdRefresh size={14} className="sm:size-[16px]" /> : <MdCheck size={14} className="sm:size-[16px]" />}
-                                    {isCompleted ? 'Redo' : 'Complete'}
-                                </button>
-                                <button onClick={() => handleEdit(task)} className="bg-slate-800 text-blue-400 p-3 rounded-2xl border border-white/5 hover:bg-slate-700 transition-all">
-                                    <MdEdit size={20} />
-                                </button>
-                                <button onClick={() => handleDelete(task.id)} className="bg-slate-800 text-red-500 p-3 rounded-2xl border border-white/5 hover:bg-red-500/10 transition-all">
-                                    <MdDelete size={20} />
-                                </button>
+                            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}>
+                                {task.description && (
+                                    <p className="text-sm font-black text-slate-500 mt-2 mb-6 leading-relaxed">
+                                        {task.description}
+                                    </p>
+                                )}
+                                <div className="pt-6 border-t border-white/5 flex gap-3">
+                                    <button onClick={() => handleCompletionPress(task.id)} className={`flex-1 py-3 px-2 rounded-2xl font-black text-[9px] sm:text-[10px] uppercase tracking-widest flex items-center justify-center gap-1 sm:gap-2 transition-all ${isCompleted ? 'bg-slate-800 text-slate-400' : 'bg-emerald-500 text-white'}`}>
+                                        {isCompleted ? <MdRefresh size={14} className="sm:size-[16px]" /> : <MdCheck size={14} className="sm:size-[16px]" />}
+                                        {isCompleted ? 'Redo' : 'Complete'}
+                                    </button>
+                                    <button onClick={() => handleEdit(task)} className="bg-slate-800 text-blue-400 p-3 rounded-2xl border border-white/5 hover:bg-slate-700 transition-all">
+                                        <MdEdit size={20} />
+                                    </button>
+                                    <button onClick={() => handleDelete(task.id)} className="bg-slate-800 text-red-500 p-3 rounded-2xl border border-white/5 hover:bg-red-500/10 transition-all">
+                                        <MdDelete size={20} />
+                                    </button>
+                                </div>
                             </motion.div>
                         )}
                     </AnimatePresence>
