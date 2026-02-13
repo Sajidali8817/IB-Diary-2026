@@ -320,7 +320,7 @@ const Tasks = () => {
                                     <h3 className={`text-lg font-black leading-tight ${isCompleted ? 'line-through text-slate-600' : 'text-white'}`}>
                                         {task.title}
                                     </h3>
-                                    <div className="flex flex-wrap gap-2 mt-2">
+                                    <div className="flex items-center gap-2 mt-2">
                                         {task.priority && (
                                             <span className="px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-widest" style={{ backgroundColor: hexToRgba(priorityColor, 0.1), color: priorityColor, border: `1px solid ${hexToRgba(priorityColor, 0.2)}` }}>
                                                 {task.priority}
