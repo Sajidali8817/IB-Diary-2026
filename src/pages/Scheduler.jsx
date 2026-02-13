@@ -170,50 +170,47 @@ const Scheduler = () => {
                                 <motion.div
                                     key={item.id}
                                     layout
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, scale: 0.95 }}
-                                    transition={{ delay: index * 0.05 }}
-                                    className="bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-[2rem] p-6 group transition-all"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    className="bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-2xl sm:rounded-[2rem] p-3 sm:p-6 group transition-all"
                                 >
-                                    <div className="flex justify-between items-start mb-4">
-                                        <div className="flex-1 pr-4">
-                                            <h3 className="text-lg font-black text-white leading-tight mb-1">{item.subject || 'No Subject'}</h3>
-                                            <div className="flex items-center gap-2">
-                                                <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border ${getStatusStyles(item.status)}`}>
-                                                    {item.status}
-                                                </span>
-                                            </div>
+                                    <div className="flex justify-between items-start mb-1 sm:mb-4">
+                                        <div className="flex-1 pr-2 sm:pr-4">
+                                            <h3 className="text-sm sm:text-lg font-black text-white leading-tight mb-0.5">{item.subject || 'No Subject'}</h3>
                                         </div>
-                                        <div className="flex gap-1">
+                                        <div className="flex flex-col items-end gap-1 sm:gap-2">
+                                            <span className={`px-2 sm:px-3 py-0.5 sm:py-1 rounded-lg text-[8px] sm:text-[10px] font-black uppercase tracking-widest border ${getStatusStyles(item.status)}`}>
+                                                {item.status}
+                                            </span>
                                             {item.status === 'PENDING' && (
-                                                <>
+                                                <div className="flex gap-1">
                                                     <button
                                                         onClick={() => navigate(`/scheduler/edit/${item.id}`)}
-                                                        className="p-2 hover:bg-white/5 rounded-xl text-slate-400 hover:text-blue-400 transition-all cursor-pointer"
+                                                        className="p-1 sm:p-2 hover:bg-white/5 rounded-xl text-slate-400 hover:text-blue-400 transition-all cursor-pointer"
                                                         title="Edit Schedule"
                                                     >
-                                                        <MdEdit size={20} />
+                                                        <MdEdit size={16} className="sm:w-5 sm:h-5" />
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(item)}
-                                                        className="p-2 hover:bg-white/5 rounded-xl text-slate-400 hover:text-red-400 transition-all cursor-pointer"
+                                                        className="p-1 sm:p-2 hover:bg-white/5 rounded-xl text-slate-400 hover:text-red-400 transition-all cursor-pointer"
                                                         title="Delete Schedule"
                                                     >
-                                                        <MdDelete size={20} />
+                                                        <MdDelete size={16} className="sm:w-5 sm:h-5" />
                                                     </button>
-                                                </>
+                                                </div>
                                             )}
                                         </div>
                                     </div>
 
                                     {item.status === 'FAILED' && (
-                                        <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex flex-col gap-3">
-                                            <div className="flex items-start gap-3">
-                                                <MdError className="text-red-500 shrink-0 mt-0.5" size={18} />
+                                        <div className="mt-2 sm:mt-4 p-2 sm:p-4 bg-red-500/10 border border-red-500/20 rounded-xl sm:rounded-2xl flex flex-col gap-1 sm:gap-3">
+                                            <div className="flex items-start gap-2 sm:gap-3">
+                                                <MdError className="text-red-500 shrink-0 mt-0.5" size={14} />
                                                 <div>
-                                                    <p className="text-[10px] font-black text-red-500 uppercase tracking-widest mb-1">Failure Reason</p>
-                                                    <p className="text-sm font-medium text-red-200/80 leading-relaxed">
+                                                    <p className="text-[9px] sm:text-[10px] font-black text-red-500 uppercase tracking-widest mb-0.5 sm:mb-1">Failure Reason</p>
+                                                    <p className="text-[10px] sm:text-sm font-medium text-red-200/80 leading-relaxed">
                                                         {item.error_info || item.error || item.message || item.failure_reason || item.detail || 'Message delivery failed. Please check recipient details or try again.'}
                                                     </p>
                                                 </div>
@@ -221,19 +218,18 @@ const Scheduler = () => {
                                         </div>
                                     )}
 
-
-                                    <div className="grid grid-cols-2 gap-6 mt-6 pt-6 border-t border-white/5">
-                                        <div className="space-y-4">
-                                            <InfoItem label="SEND TO" value={item.send_to} icon={<MdAccountCircle size={14} />} />
+                                    <div className="grid grid-cols-2 gap-2 sm:gap-6 mt-2 sm:mt-6 pt-2 sm:pt-6 border-t border-white/5">
+                                        <div className="space-y-1 sm:space-y-4">
+                                            <InfoItem label="SEND TO" value={item.send_to} icon={<MdAccountCircle size={10} className="sm:w-3.5 sm:h-3.5" />} />
                                             <InfoItem
                                                 label="VIA"
                                                 value={item.send_via}
-                                                icon={item.send_via === 'EMAIL' ? <MdEmail size={14} className="text-blue-400" /> : <MdWhatsapp size={14} className="text-emerald-400" />}
+                                                icon={item.send_via === 'EMAIL' ? <MdEmail size={10} className="text-blue-400 sm:w-3.5 sm:h-3.5" /> : <MdWhatsapp size={10} className="text-emerald-400 sm:w-3.5 sm:h-3.5" />}
                                             />
                                         </div>
                                         <div className="flex flex-col justify-end items-end text-right">
-                                            <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-1 font-outfit">Scheduled For</p>
-                                            <p className="text-sm font-bold text-slate-200">{formatDateTime(item.send_at)}</p>
+                                            <p className="text-[8px] sm:text-[10px] font-black text-slate-600 uppercase tracking-widest mb-0.5 sm:mb-1 font-outfit">Scheduled For</p>
+                                            <p className="text-[10px] sm:text-sm font-bold text-slate-200">{formatDateTime(item.send_at)}</p>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -280,13 +276,13 @@ const Scheduler = () => {
 };
 
 const StatCard = ({ label, count, icon, color, bg }) => (
-    <div className="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-5 rounded-[2rem] flex flex-col gap-3">
-        <div className={`w-10 h-10 rounded-xl ${bg} ${color} flex items-center justify-center text-xl`}>
+    <div className="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-3 sm:p-5 rounded-2xl sm:rounded-[2rem] flex flex-row sm:flex-col items-center sm:items-start gap-3 sm:gap-4 transition-all hover:bg-white/5">
+        <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl ${bg} ${color} flex items-center justify-center text-lg sm:text-xl shrink-0`}>
             {icon}
         </div>
-        <div>
-            <p className="text-2xl font-black text-white leading-none">{count}</p>
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-2">{label}</p>
+        <div className="flex flex-col sm:block">
+            <p className="text-lg sm:text-2xl font-black text-white leading-none">{count}</p>
+            <p className="text-[8px] sm:text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1 sm:mt-2">{label}</p>
         </div>
     </div>
 );
