@@ -1004,20 +1004,20 @@ const Notes = () => {
                             </p>
                         </div>
 
-                        <div className="flex gap-3">
+                        <div className="flex justify-center gap-6 pt-4 border-t border-white/5">
                             <button
                                 onClick={() => openEditModal(noteToView)}
-                                className="flex-1 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all flex items-center justify-center gap-2"
+                                className="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-full hover:bg-blue-500 hover:text-white transition-all flex items-center justify-center shadow-lg shadow-blue-500/10"
+                                title="Edit"
                             >
                                 <MdEdit size={20} />
-                                Edit
                             </button>
                             <button
                                 onClick={() => handleShare(noteToView.title, noteToView.content)}
-                                className="flex-1 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-all flex items-center justify-center gap-2"
+                                className="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-full hover:bg-emerald-500 hover:text-white transition-all flex items-center justify-center shadow-lg shadow-emerald-500/10"
+                                title="Share"
                             >
                                 <MdShare size={20} />
-                                Share
                             </button>
                             <button
                                 onClick={() => {
@@ -1025,10 +1025,10 @@ const Notes = () => {
                                     setDeleteTarget('single');
                                     setShowDeleteConfirm(true);
                                 }}
-                                className="flex-1 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all flex items-center justify-center gap-2"
+                                className="w-12 h-12 bg-red-500/10 text-red-400 rounded-full hover:bg-red-500 hover:text-white transition-all flex items-center justify-center shadow-lg shadow-red-500/10"
+                                title="Delete"
                             >
                                 <MdDelete size={20} />
-                                Delete
                             </button>
                         </div>
                     </motion.div>
