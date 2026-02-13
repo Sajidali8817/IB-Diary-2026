@@ -972,9 +972,10 @@ const Notes = () => {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-slate-800 rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+                        className="bg-slate-800 rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl"
                     >
-                        <div className="flex justify-between items-start mb-4 gap-4">
+                        {/* Header */}
+                        <div className="flex justify-between items-start mb-4 gap-4 flex-shrink-0">
                             <h2 className="text-2xl font-bold text-white break-words overflow-hidden">
                                 {noteToView.title}
                             </h2>
@@ -989,7 +990,8 @@ const Notes = () => {
                             </button>
                         </div>
 
-                        <div className="text-sm text-slate-400 mb-4 font-medium">
+                        {/* Date */}
+                        <div className="text-sm text-slate-400 mb-4 font-medium flex-shrink-0">
                             {new Date(noteToView.date || noteToView.created_at).toLocaleDateString('en-US', {
                                 weekday: 'long',
                                 year: 'numeric',
@@ -998,12 +1000,16 @@ const Notes = () => {
                             })}
                         </div>
 
-                        <div
-                            className="bg-slate-900/50 border border-white/5 rounded-2xl p-5 mb-6 min-h-[200px] overflow-hidden text-white break-words leading-relaxed text-lg note-content-preview"
-                            dangerouslySetInnerHTML={{ __html: noteToView.content || 'No content' }}
-                        />
+                        {/* Scrollable Content Area */}
+                        <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar mb-6">
+                            <div
+                                className="bg-slate-900/50 border border-white/5 rounded-2xl p-5 min-h-[200px] overflow-hidden text-white break-words leading-relaxed text-lg note-content-preview"
+                                dangerouslySetInnerHTML={{ __html: noteToView.content || 'No content' }}
+                            />
+                        </div>
 
-                        <div className="flex justify-center gap-6 pt-4 border-t border-white/5">
+                        {/* Fixed Footer Buttons */}
+                        <div className="flex justify-center gap-6 pt-4 border-t border-white/5 flex-shrink-0">
                             <button
                                 onClick={() => openEditModal(noteToView)}
                                 className="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-full hover:bg-blue-500 hover:text-white transition-all flex items-center justify-center shadow-lg shadow-blue-500/10"
