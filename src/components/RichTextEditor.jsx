@@ -38,78 +38,77 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
     // ... (existing effects and handles)
 
     return (
-        <div className="flex flex-col h-full relative">
-            {/* Toolbar */}
-            <div className={`
-                flex items-center gap-1 p-1 bg-slate-800/95 backdrop-blur-2xl border border-white/10 z-[100] transition-all duration-300
-                ${isFocused ?
-                    'fixed right-2 top-1/2 -translate-y-1/2 flex-col w-auto rounded-2xl px-2 py-4 shadow-2xl border-white/20 sm:sticky sm:top-0 sm:translate-y-0 sm:flex-row sm:mb-4 sm:rounded-2xl sm:max-w-fit sm:w-auto sm:border sm:px-1' :
-                    'sticky top-0 mb-4 rounded-2xl max-w-fit overflow-x-auto no-scrollbar whitespace-nowrap'
-                }
-            `}>
-                <button
-                    onMouseDown={(e) => { e.preventDefault(); execCommand('bold'); }}
-                    className="p-2.5 hover:bg-white/10 rounded-xl text-slate-300 hover:text-white transition-all flex-shrink-0 active:scale-95"
-                    title="Bold"
-                >
-                    <MdFormatBold size={24} />
-                </button>
-                <button
-                    onMouseDown={(e) => { e.preventDefault(); execCommand('italic'); }}
-                    className="p-2.5 hover:bg-white/10 rounded-xl text-slate-300 hover:text-white transition-all flex-shrink-0 active:scale-95"
-                    title="Italic"
-                >
-                    <MdFormatItalic size={24} />
-                </button>
-                <button
-                    onMouseDown={(e) => { e.preventDefault(); execCommand('underline'); }}
-                    className="p-2.5 hover:bg-white/10 rounded-xl text-slate-300 hover:text-white transition-all flex-shrink-0 active:scale-95"
-                    title="Underline"
-                >
-                    <MdFormatUnderlined size={24} />
-                </button>
+        <div className="flex flex-col h-full relative overflow-hidden">
+            {/* Toolbar - Only visible when focused */}
+            {isFocused && (
+                <div className={`
+                    fixed right-2 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1 p-1 bg-slate-800/95 backdrop-blur-2xl border border-white/20 z-[100] transition-all duration-300 rounded-2xl px-2 py-4 shadow-2xl
+                    sm:sticky sm:top-0 sm:translate-y-0 sm:flex-row sm:mb-4 sm:max-w-fit sm:border-white/10 sm:px-1
+                `}>
+                    <button
+                        onMouseDown={(e) => { e.preventDefault(); execCommand('bold'); }}
+                        className="p-2.5 hover:bg-white/10 rounded-xl text-slate-300 hover:text-white transition-all flex-shrink-0 active:scale-95"
+                        title="Bold"
+                    >
+                        <MdFormatBold size={24} />
+                    </button>
+                    <button
+                        onMouseDown={(e) => { e.preventDefault(); execCommand('italic'); }}
+                        className="p-2.5 hover:bg-white/10 rounded-xl text-slate-300 hover:text-white transition-all flex-shrink-0 active:scale-95"
+                        title="Italic"
+                    >
+                        <MdFormatItalic size={24} />
+                    </button>
+                    <button
+                        onMouseDown={(e) => { e.preventDefault(); execCommand('underline'); }}
+                        className="p-2.5 hover:bg-white/10 rounded-xl text-slate-300 hover:text-white transition-all flex-shrink-0 active:scale-95"
+                        title="Underline"
+                    >
+                        <MdFormatUnderlined size={24} />
+                    </button>
 
-                <div className={`bg-white/10 flex-shrink-0 ${isFocused ? 'w-full h-px my-1 sm:w-px sm:h-6 sm:mx-1' : 'w-px h-6 mx-1'}`} />
+                    <div className="bg-white/10 flex-shrink-0 w-full h-px my-1 sm:w-px sm:h-6 sm:mx-1" />
 
-                <button
-                    onMouseDown={(e) => { e.preventDefault(); execCommand('insertUnorderedList'); }}
-                    className="p-2.5 hover:bg-white/10 rounded-xl text-slate-300 hover:text-white transition-all flex-shrink-0 active:scale-95"
-                    title="Bullet List"
-                >
-                    <MdFormatListBulleted size={24} />
-                </button>
-                <button
-                    onMouseDown={(e) => { e.preventDefault(); execCommand('insertOrderedList'); }}
-                    className="p-2.5 hover:bg-white/10 rounded-xl text-slate-300 hover:text-white transition-all flex-shrink-0 active:scale-95"
-                    title="Numbered List"
-                >
-                    <MdFormatListNumbered size={24} />
-                </button>
+                    <button
+                        onMouseDown={(e) => { e.preventDefault(); execCommand('insertUnorderedList'); }}
+                        className="p-2.5 hover:bg-white/10 rounded-xl text-slate-300 hover:text-white transition-all flex-shrink-0 active:scale-95"
+                        title="Bullet List"
+                    >
+                        <MdFormatListBulleted size={24} />
+                    </button>
+                    <button
+                        onMouseDown={(e) => { e.preventDefault(); execCommand('insertOrderedList'); }}
+                        className="p-2.5 hover:bg-white/10 rounded-xl text-slate-300 hover:text-white transition-all flex-shrink-0 active:scale-95"
+                        title="Numbered List"
+                    >
+                        <MdFormatListNumbered size={24} />
+                    </button>
 
-                <div className={`bg-white/10 flex-shrink-0 ${isFocused ? 'w-full h-px my-1 sm:w-px sm:h-6 sm:mx-1' : 'w-px h-6 mx-1'}`} />
+                    <div className="bg-white/10 flex-shrink-0 w-full h-px my-1 sm:w-px sm:h-6 sm:mx-1" />
 
-                {/* Color Options */}
-                <div className={`flex items-center gap-2 flex-shrink-0 ${isFocused ? 'flex-col px-0 py-2 sm:flex-row sm:px-2 sm:py-0' : 'px-2'}`}>
-                    {[
-                        { color: '#ffffff', label: 'White' },
-                        { color: '#3B82F6', label: 'Blue' },
-                        { color: '#EF4444', label: 'Red' },
-                        { color: '#10B981', label: 'Green' },
-                        { color: '#F59E0B', label: 'Amber' },
-                        { color: '#8B5CF6', label: 'Purple' }
-                    ].map((c) => (
-                        <button
-                            key={c.color}
-                            onMouseDown={(e) => { e.preventDefault(); execCommand('foreColor', c.color); }}
-                            className="w-6 h-6 rounded-full border border-white/10 hover:scale-125 transition-transform flex-shrink-0 active:scale-90"
-                            style={{ backgroundColor: c.color }}
-                            title={c.label}
-                        />
-                    ))}
+                    {/* Color Options */}
+                    <div className="flex flex-col items-center gap-2 flex-shrink-0 px-0 py-2 sm:flex-row sm:px-2 sm:py-0">
+                        {[
+                            { color: '#ffffff', label: 'White' },
+                            { color: '#3B82F6', label: 'Blue' },
+                            { color: '#EF4444', label: 'Red' },
+                            { color: '#10B981', label: 'Green' },
+                            { color: '#F59E0B', label: 'Amber' },
+                            { color: '#8B5CF6', label: 'Purple' }
+                        ].map((c) => (
+                            <button
+                                key={c.color}
+                                onMouseDown={(e) => { e.preventDefault(); execCommand('foreColor', c.color); }}
+                                className="w-6 h-6 rounded-full border border-white/10 hover:scale-125 transition-transform flex-shrink-0 active:scale-90"
+                                style={{ backgroundColor: c.color }}
+                                title={c.label}
+                            />
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
 
-            {/* Editable Area */}
+            {/* Editable Area - Scrollable */}
             <div
                 ref={editorRef}
                 contentEditable
@@ -118,7 +117,7 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
                 onBlur={() => {
                     setTimeout(() => setIsFocused(false), 200);
                 }}
-                className={`w-full bg-transparent text-slate-200 text-xl font-medium placeholder:text-slate-800 outline-none leading-relaxed transition-all min-h-[400px] ${isFocused ? 'pr-16 sm:pr-0' : ''}`}
+                className={`flex-1 w-full bg-transparent text-slate-200 text-xl font-medium placeholder:text-slate-800 outline-none leading-relaxed transition-all overflow-y-auto custom-scrollbar ${isFocused ? 'pr-16 sm:pr-0' : ''}`}
                 data-placeholder={placeholder}
             />
 
