@@ -998,11 +998,10 @@ const Notes = () => {
                             })}
                         </div>
 
-                        <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-5 mb-6 min-h-[200px] overflow-hidden">
-                            <p className="text-white whitespace-pre-wrap break-words leading-relaxed text-lg">
-                                {noteToView.content || 'No content'}
-                            </p>
-                        </div>
+                        <div
+                            className="bg-slate-900/50 border border-white/5 rounded-2xl p-5 mb-6 min-h-[200px] overflow-hidden text-white break-words leading-relaxed text-lg note-content-preview"
+                            dangerouslySetInnerHTML={{ __html: noteToView.content || 'No content' }}
+                        />
 
                         <div className="flex justify-center gap-6 pt-4 border-t border-white/5">
                             <button
