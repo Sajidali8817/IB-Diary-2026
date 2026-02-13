@@ -317,7 +317,7 @@ const Tasks = () => {
                                     {CATEGORY_ICONS[task.category?.toLowerCase()] || CATEGORY_ICONS.general}
                                 </div>
                                 <div>
-                                    <h3 className={`text-lg font-black leading-tight ${isCompleted ? 'line-through text-slate-600' : 'text-white'}`}>
+                                    <h3 className={`text-base font-black leading-tight ${isCompleted ? 'line-through text-slate-600' : 'text-white'}`}>
                                         {task.title}
                                     </h3>
                                     <div className="flex items-center gap-2 mt-2">
