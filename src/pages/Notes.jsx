@@ -92,8 +92,7 @@ const Notes = () => {
         if (selectionMode) {
             toggleSelection(note.id);
         } else {
-            setNoteToView(note);
-            setViewModalVisible(true);
+            openEditModal(note);
         }
     };
 
@@ -111,9 +110,17 @@ const Notes = () => {
         } else if (deleteTarget === 'single' && noteToDelete) {
             deleteNote(noteToDelete);
             toast.success('Note deleted');
-            setViewModalVisible(false);
-            setNoteToView(null);
             setNoteToDelete(null);
+            // If we were editing the note that was deleted, close the modal
+            if (noteToEdit && noteToEdit.id === noteToDelete) {
+                setEditModalVisible(false);
+                setNoteToEdit(null);
+                setNoteTitle('');
+                setNoteContent('');
+                setLinkedTaskId('');
+                setNoteImages([]);
+                setNotePinned(false);
+            }
         }
         setShowDeleteConfirm(false);
     };
@@ -141,6 +148,7 @@ const Notes = () => {
             setLinkedTaskId('');
             setNoteImages([]);
             setAddModalVisible(false);
+            setNotePinned(false);
         } finally {
             setIsSavingNote(false);
         }
@@ -170,6 +178,7 @@ const Notes = () => {
             setNoteImages([]);
             setNoteToEdit(null);
             setEditModalVisible(false);
+            setNotePinned(false);
         } finally {
             setIsSavingNote(false);
         }
@@ -180,7 +189,7 @@ const Notes = () => {
         if (isSavingNote) return;
 
         // Check if there's anything to save (title or content)
-        const hasContent = noteTitle.trim() || noteContent.trim();
+        const hasContent = noteTitle.trim() || noteContent.trim() || noteImages.length > 0;
         if (!hasContent) {
             // Nothing to save, just close
             setAddModalVisible(false);
@@ -190,6 +199,7 @@ const Notes = () => {
             setNoteContent('');
             setLinkedTaskId('');
             setNoteImages([]);
+            setNotePinned(false);
             return;
         }
 
@@ -227,6 +237,7 @@ const Notes = () => {
             setNoteToEdit(null);
             setAddModalVisible(false);
             setEditModalVisible(false);
+            setNotePinned(false);
         } catch (error) {
             console.error('Auto-save failed:', error);
             // Close anyway on error to avoid blocking the user
@@ -237,6 +248,7 @@ const Notes = () => {
             setNoteContent('');
             setLinkedTaskId('');
             setNoteImages([]);
+            setNotePinned(false);
         } finally {
             setIsSavingNote(false);
         }
@@ -247,9 +259,9 @@ const Notes = () => {
         setNoteTitle(note.title);
         setNoteContent(note.content || '');
         setLinkedTaskId(note.linkedTaskId || '');
+        setNoteImages(note.images || []);
         setNotePinned(note.isPinned || false);
         setEditModalVisible(true);
-        setViewModalVisible(false);
     };
 
     const handleShare = async (title, content, noteDate = null) => {
@@ -453,17 +465,11 @@ const Notes = () => {
                         </button>
                     </div>
 
-                    {/* Edit and Delete buttons - Bottom Right */}
+                    {/* Share and Delete buttons - Bottom Right */}
                     <div
                         className="absolute bottom-3 right-3 z-20 flex gap-1 p-1 bg-white/10 backdrop-blur-sm rounded-full"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <button
-                            onClick={(e) => { e.stopPropagation(); openEditModal(note); }}
-                            className={`p-1.5 rounded-full transition-all cursor-pointer text-slate-600 hover:text-slate-900 hover:bg-black/5`}
-                        >
-                            <MdEdit size={18} className="pointer-events-none" />
-                        </button>
                         <button
                             onClick={(e) => { e.stopPropagation(); handleShare(note.title, note.content, note.date || note.created_at); }}
                             className={`p-1.5 rounded-full transition-all cursor-pointer text-slate-400 hover:text-slate-900 hover:bg-black/5`}
@@ -965,7 +971,7 @@ const Notes = () => {
                                         <MdLink size={26} />
                                     </button>
                                     <button
-                                        onClick={() => handleShare(noteTitle, noteContent, noteDate)}
+                                        onClick={() => handleShare(noteTitle, noteContent, noteToEdit ? (noteToEdit.date || noteToEdit.created_at) : new Date())}
                                         className="w-12 h-12 rounded-full flex items-center justify-center text-slate-900 hover:bg-black/5 active:scale-90 transition-all"
                                     >
                                         <MdShare size={26} />
@@ -977,82 +983,8 @@ const Notes = () => {
                 )}
             </AnimatePresence>
 
-            {/* View Modal */}
-            {viewModalVisible && noteToView && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="bg-slate-800 rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl"
-                    >
-                        {/* Header */}
-                        <div className="flex justify-between items-start mb-4 gap-4 flex-shrink-0">
-                            <h2 className="text-2xl font-bold text-white break-words overflow-hidden">
-                                {noteToView.title}
-                            </h2>
-                            <button
-                                onClick={() => {
-                                    setViewModalVisible(false);
-                                    setNoteToView(null);
-                                }}
-                                className="p-2 hover:bg-slate-700 rounded-lg flex-shrink-0"
-                            >
-                                <MdClose size={24} className="text-slate-400" />
-                            </button>
-                        </div>
-
-                        {/* Date */}
-                        <div className="text-sm text-slate-400 mb-4 font-medium flex-shrink-0">
-                            {new Date(noteToView.date || noteToView.created_at).toLocaleDateString('en-US', {
-                                weekday: 'long',
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                            })}
-                        </div>
-
-                        {/* Scrollable Content Area */}
-                        <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar mb-6">
-                            <div
-                                className="bg-slate-900/50 border border-white/5 rounded-2xl p-5 min-h-[200px] overflow-hidden text-white break-words leading-relaxed text-lg note-content-preview"
-                                dangerouslySetInnerHTML={{ __html: noteToView.content || 'No content' }}
-                            />
-                        </div>
-
-                        {/* Fixed Footer Buttons */}
-                        <div className="flex justify-center gap-6 pt-4 pb-6 border-t border-white/5 flex-shrink-0">
-                            <button
-                                onClick={() => openEditModal(noteToView)}
-                                className="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-full hover:bg-blue-500 hover:text-white transition-all flex items-center justify-center shadow-lg shadow-blue-500/10"
-                                title="Edit"
-                            >
-                                <MdEdit size={20} />
-                            </button>
-                            <button
-                                onClick={() => handleShare(noteToView.title, noteToView.content, noteToView.date || noteToView.created_at)}
-                                className="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-full hover:bg-emerald-500 hover:text-white transition-all flex items-center justify-center shadow-lg shadow-emerald-500/10"
-                                title="Share"
-                            >
-                                <MdShare size={20} />
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setNoteToDelete(noteToView.id);
-                                    setDeleteTarget('single');
-                                    setShowDeleteConfirm(true);
-                                }}
-                                className="w-12 h-12 bg-red-500/10 text-red-400 rounded-full hover:bg-red-500 hover:text-white transition-all flex items-center justify-center shadow-lg shadow-red-500/10"
-                                title="Delete"
-                            >
-                                <MdDelete size={20} />
-                            </button>
-                        </div>
-                    </motion.div>
-                </div>
-            )}
-
             {/* Floating Add Button */}
-            {!selectionMode && !addModalVisible && !editModalVisible && !viewModalVisible && (
+            {!selectionMode && !addModalVisible && !editModalVisible && (
                 <div className="fixed bottom-24 right-6 z-[90]">
                     <motion.button
                         initial={{ scale: 0, opacity: 0 }}
