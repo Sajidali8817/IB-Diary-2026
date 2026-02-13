@@ -1041,7 +1041,7 @@ const Notes = () => {
             )}
 
             {/* Floating Add Button */}
-            {!selectionMode && !addModalVisible && !editModalVisible && (
+            {!selectionMode && !addModalVisible && !editModalVisible && !viewModalVisible && (
                 <div className="fixed bottom-24 right-6 z-[90]">
                     <motion.button
                         initial={{ scale: 0, opacity: 0 }}
