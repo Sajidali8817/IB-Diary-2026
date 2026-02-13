@@ -332,21 +332,21 @@ const Tasks = () => {
                                     </div>
                                 </div>
                             </div>
-                            <motion.div
-                                animate={{ rotate: isExpanded ? 180 : 0 }}
-                                className="text-slate-600 group-hover:text-blue-500 transition-colors p-1.5 rounded-full hover:bg-white/5"
-                            >
-                                <MdExpandMore size={24} />
-                            </motion.div>
+                            <div className="flex flex-col items-end">
+                                <motion.div
+                                    animate={{ rotate: isExpanded ? 180 : 0 }}
+                                    className="text-slate-600 group-hover:text-blue-500 transition-colors p-1.5 rounded-full hover:bg-white/5"
+                                >
+                                    <MdExpandMore size={24} />
+                                </motion.div>
+                                {(task.date || task.created_at) && (
+                                    <div className="text-[8px] sm:text-[9px] font-black text-slate-500/80 pr-1.5 whitespace-nowrap">
+                                        Created: {new Date(task.date || task.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
-
-                    {/* Created Date - Bottom Right */}
-                    {(task.date || task.created_at) && (
-                        <div className="absolute bottom-3 right-5 text-[9px] font-black text-slate-500 pointer-events-none">
-                            Created: {new Date(task.date || task.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}
-                        </div>
-                    )}
 
                     <AnimatePresence>
                         {isExpanded && (
