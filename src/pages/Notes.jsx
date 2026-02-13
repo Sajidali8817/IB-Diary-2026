@@ -91,8 +91,10 @@ const Notes = () => {
     const handlePress = (note) => {
         if (selectionMode) {
             toggleSelection(note.id);
+        } else {
+            setNoteToView(note);
+            setViewModalVisible(true);
         }
-        // Disabled viewing on card click as per user request
     };
 
     const handleDeleteSelected = () => {
@@ -250,6 +252,34 @@ const Notes = () => {
         setViewModalVisible(false);
     };
 
+    const handleShare = async (title, content) => {
+        // Strip HTML tags for clean text sharing
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = content || '';
+        const plainText = tempDiv.textContent || tempDiv.innerText || '';
+
+        const shareData = {
+            title: title || 'Note',
+            text: plainText
+        };
+
+        try {
+            if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+                await navigator.share(shareData);
+            } else {
+                // Fallback to clipboard
+                const fullText = `${shareData.title}\n\n${shareData.text}`;
+                await navigator.clipboard.writeText(fullText);
+                toast.success('Note copied to clipboard');
+            }
+        } catch (error) {
+            if (error.name !== 'AbortError') {
+                console.error('Sharing failed:', error);
+                toast.error('Could not share note');
+            }
+        }
+    };
+
     // Voice Recognition Logic
     const startVoiceTyping = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -381,7 +411,7 @@ const Notes = () => {
                 className="relative mb-3"
             >
                 <div
-                    onClick={selectionMode ? () => handlePress(note) : undefined}
+                    onClick={() => handlePress(note)}
                     onContextMenu={(e) => {
                         e.preventDefault();
                         handleLongPress(note.id);
@@ -422,6 +452,12 @@ const Notes = () => {
                             className={`p-1.5 rounded-full transition-all cursor-pointer text-slate-600 hover:text-slate-900 hover:bg-black/5`}
                         >
                             <MdEdit size={18} className="pointer-events-none" />
+                        </button>
+                        <button
+                            onClick={(e) => { e.stopPropagation(); handleShare(note.title, note.content); }}
+                            className={`p-1.5 rounded-full transition-all cursor-pointer text-slate-600 hover:text-blue-600 hover:bg-black/5`}
+                        >
+                            <MdShare size={18} className="pointer-events-none" />
                         </button>
                         <button
                             onClick={(e) => { e.stopPropagation(); setNoteToDelete(note.id); setDeleteTarget('single'); setShowDeleteConfirm(true); }}
@@ -910,13 +946,7 @@ const Notes = () => {
                                         <MdLink size={26} />
                                     </button>
                                     <button
-                                        onClick={() => {
-                                            if (navigator.share) {
-                                                navigator.share({ title: noteTitle, text: noteContent });
-                                            } else {
-                                                toast.error('Sharing not supported on this device');
-                                            }
-                                        }}
+                                        onClick={() => handleShare(noteTitle, noteContent)}
                                         className="w-12 h-12 rounded-full flex items-center justify-center text-slate-900 hover:bg-black/5 active:scale-90 transition-all"
                                     >
                                         <MdShare size={26} />
@@ -973,6 +1003,13 @@ const Notes = () => {
                             >
                                 <MdEdit size={20} />
                                 Edit
+                            </button>
+                            <button
+                                onClick={() => handleShare(noteToView.title, noteToView.content)}
+                                className="flex-1 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-all flex items-center justify-center gap-2"
+                            >
+                                <MdShare size={20} />
+                                Share
                             </button>
                             <button
                                 onClick={() => {
