@@ -974,8 +974,8 @@ const Notes = () => {
                         animate={{ opacity: 1, scale: 1 }}
                         className="bg-slate-800 rounded-2xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
                     >
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-2xl font-bold text-white">
+                        <div className="flex justify-between items-start mb-4 gap-4">
+                            <h2 className="text-2xl font-bold text-white break-words overflow-hidden">
                                 {noteToView.title}
                             </h2>
                             <button
@@ -983,13 +983,13 @@ const Notes = () => {
                                     setViewModalVisible(false);
                                     setNoteToView(null);
                                 }}
-                                className="p-2 hover:bg-slate-700 rounded-lg"
+                                className="p-2 hover:bg-slate-700 rounded-lg flex-shrink-0"
                             >
                                 <MdClose size={24} className="text-slate-400" />
                             </button>
                         </div>
 
-                        <div className="text-sm text-slate-400 mb-4">
+                        <div className="text-sm text-slate-400 mb-4 font-medium">
                             {new Date(noteToView.date || noteToView.created_at).toLocaleDateString('en-US', {
                                 weekday: 'long',
                                 year: 'numeric',
@@ -998,8 +998,8 @@ const Notes = () => {
                             })}
                         </div>
 
-                        <div className="bg-slate-900 rounded-lg p-4 mb-4 min-h-[200px]">
-                            <p className="text-white whitespace-pre-wrap">
+                        <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-5 mb-6 min-h-[200px] overflow-hidden">
+                            <p className="text-white whitespace-pre-wrap break-words leading-relaxed text-lg">
                                 {noteToView.content || 'No content'}
                             </p>
                         </div>
