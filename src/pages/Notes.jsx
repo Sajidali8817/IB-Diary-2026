@@ -420,7 +420,7 @@ const Notes = () => {
                         }`}
                     style={{
                         backgroundColor: color,
-                        minHeight: '180px',
+                        minHeight: '140px',
                     }}
                 >
                     {note.isPinned && (
@@ -487,7 +487,7 @@ const Notes = () => {
 
                     {note.content && (
                         <div
-                            className="text-[14px] font-semibold text-slate-800/80 line-clamp-6 leading-relaxed note-content-preview"
+                            className="text-[14px] font-semibold text-slate-800/80 line-clamp-4 leading-relaxed note-content-preview"
                             dangerouslySetInnerHTML={{ __html: note.content }}
                         />
                     )}
@@ -591,14 +591,22 @@ const Notes = () => {
                         </button>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col gap-4">
-                            {leftNotes.map(renderNoteCard)}
+                    <>
+                        {/* Mobile View: Sequential List (1 column) */}
+                        <div className="sm:hidden flex flex-col gap-4">
+                            {filteredNotes.map(renderNoteCard)}
                         </div>
-                        <div className="flex flex-col gap-4">
-                            {rightNotes.map(renderNoteCard)}
+
+                        {/* Tablet/Desktop View: Masonry Split (2 columns) */}
+                        <div className="hidden sm:grid grid-cols-2 gap-4">
+                            <div className="flex flex-col gap-4">
+                                {leftNotes.map(renderNoteCard)}
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                {rightNotes.map(renderNoteCard)}
+                            </div>
                         </div>
-                    </div>
+                    </>
                 )}
             </div>
 
