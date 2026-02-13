@@ -307,13 +307,13 @@ const Tasks = () => {
                 <motion.div
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
-                    className={`flex-1 bg-slate-900/40 backdrop-blur-xl rounded-[1.8rem] sm:rounded-[2.5rem] border-2 p-4 sm:p-6 transition-all shadow-2xl relative overflow-hidden`}
+                    className={`flex-1 bg-slate-900/40 backdrop-blur-xl rounded-[1.8rem] sm:rounded-[2.5rem] border-2 p-3 sm:p-5 transition-all shadow-2xl relative overflow-hidden`}
                     style={{ borderColor: hexToRgba(borderColor, 0.3) }}
                 >
                     <div className="cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
                         <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-2xl bg-slate-950 flex items-center justify-center text-2xl text-blue-500 shadow-inner">
+                                <div className="w-10 h-10 rounded-xl bg-slate-950 flex items-center justify-center text-xl text-blue-500 shadow-inner">
                                     {CATEGORY_ICONS[task.category?.toLowerCase()] || CATEGORY_ICONS.general}
                                 </div>
                                 <div>
