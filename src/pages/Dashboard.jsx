@@ -404,9 +404,9 @@ const Dashboard = () => {
 
                 {/* Task Details Analytics */}
                 <div ref={taskDetailsRef} className="dark:bg-[#1E293B] bg-white border dark:border-white/5 border-slate-200 rounded-[2rem] p-5 space-y-6 shadow-xl dark:shadow-none">
-                    <div className="flex items-center justify-between gap-2 overflow-hidden">
-                        <h3 className="dark:text-white text-slate-900 text-xs font-black font-outfit uppercase tracking-tighter whitespace-nowrap shrink-0">Task Details</h3>
-                        <div className="flex dark:bg-[#0f172a] bg-slate-100 p-1 rounded-xl gap-1 border dark:border-white/5 border-slate-200">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                        <h3 className="dark:text-white text-slate-900 text-xs font-black font-outfit uppercase tracking-tighter whitespace-nowrap">Task Details</h3>
+                        <div className="flex dark:bg-[#0f172a] bg-slate-100 p-1 rounded-xl gap-1 border dark:border-white/5 border-slate-200 shrink-0">
                             {analyticsTabs.map(tab => (
                                 <button
                                     key={tab}
