@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import { checkGrammar } from '../services/geminiService';
 import ConfirmModal from '../components/ConfirmModal';
 import RichTextEditor from '../components/RichTextEditor';
+import ThemeToggle from '../components/ThemeToggle';
 
 const NOTE_COLORS = [
     '#FFB3BA', // Pink
@@ -523,9 +524,9 @@ const Notes = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-950 pb-24 overflow-x-hidden">
+        <div className="min-h-screen dark:bg-slate-950 bg-slate-50 pb-24 overflow-x-hidden transition-colors duration-300">
             {/* Header */}
-            <div className="bg-slate-900/80 backdrop-blur-xl sticky top-0 z-30 border-b border-white/5">
+            <div className="dark:bg-slate-900/80 bg-white/80 backdrop-blur-xl sticky top-0 z-30 dark:border-white/5 border-slate-200 border-b">
                 <div className="p-6">
                     {selectionMode ? (
                         <div className="flex justify-between items-center h-[52px]">
@@ -535,11 +536,11 @@ const Notes = () => {
                                         setSelectionMode(false);
                                         setSelectedNotes([]);
                                     }}
-                                    className="w-10 h-10 flex items-center justify-center hover:bg-white/10 rounded-full transition-all"
+                                    className="w-10 h-10 flex items-center justify-center dark:hover:bg-white/10 hover:bg-slate-100 rounded-full transition-all"
                                 >
-                                    <MdClose size={28} className="text-white" />
+                                    <MdClose size={28} className="dark:text-white text-slate-900" />
                                 </button>
-                                <h1 className="text-xl font-bold text-white">
+                                <h1 className="text-xl font-bold dark:text-white text-slate-900">
                                     {selectedNotes.length} Selected
                                 </h1>
                             </div>
@@ -552,39 +553,40 @@ const Notes = () => {
                             </button>
                         </div>
                     ) : isSearchActive ? (
-                        <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-2xl px-4 h-[52px] shadow-inner">
-                            <MdSearch size={22} className="text-slate-400" />
+                        <div className="flex items-center gap-2 dark:bg-white/5 bg-slate-100 dark:border-white/10 border-slate-200 border rounded-2xl px-4 h-[52px] shadow-inner">
+                            <MdSearch size={22} className="dark:text-slate-400 text-slate-500" />
                             <input
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Search..."
-                                className="flex-1 bg-transparent text-white outline-none font-medium placeholder:text-slate-500"
+                                className="flex-1 bg-transparent dark:text-white text-slate-900 outline-none font-medium dark:placeholder:text-slate-500 placeholder:text-slate-400"
                                 autoFocus
                             />
                             <button onClick={() => { setIsSearchActive(false); setSearchQuery(''); }}>
-                                <MdClose size={22} className="text-slate-400" />
+                                <MdClose size={22} className="dark:text-slate-400 text-slate-500" />
                             </button>
                         </div>
                     ) : (
                         <div className="flex justify-between items-center">
                             <div>
-                                <h1 className="text-2xl font-black text-white font-outfit leading-none tracking-tight">My Notes</h1>
+                                <h1 className="text-2xl font-black dark:text-white text-slate-900 font-outfit leading-none tracking-tight">My Notes</h1>
                                 <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">{notes.length} thoughts recorded</p>
                             </div>
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => setIsSearchActive(true)}
-                                    className="w-12 h-12 flex items-center justify-center hover:bg-white/5 rounded-2xl transition-all"
+                                    className="w-12 h-12 flex items-center justify-center dark:hover:bg-white/5 hover:bg-slate-100 rounded-2xl transition-all"
                                 >
-                                    <MdSearch size={28} className="text-white" />
+                                    <MdSearch size={28} className="dark:text-white text-slate-900" />
                                 </button>
                                 <button
                                     onClick={() => setSortModalVisible(true)}
-                                    className="w-12 h-12 flex items-center justify-center hover:bg-white/5 rounded-2xl transition-all"
+                                    className="w-12 h-12 flex items-center justify-center dark:hover:bg-white/5 hover:bg-slate-100 rounded-2xl transition-all"
                                 >
-                                    <MdSort size={28} className="text-white" />
+                                    <MdSort size={28} className="dark:text-white text-slate-900" />
                                 </button>
+                                <ThemeToggle />
                             </div>
                         </div>
                     )}
@@ -595,10 +597,10 @@ const Notes = () => {
             <div className="p-6">
                 {filteredNotes.length === 0 ? (
                     <div className="text-center py-24">
-                        <div className="w-24 h-24 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 text-5xl">
+                        <div className="w-24 h-24 dark:bg-slate-800 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6 text-5xl">
                             📝
                         </div>
-                        <h3 className="text-white text-xl font-bold">No notes yet</h3>
+                        <h3 className="dark:text-white text-slate-900 text-xl font-bold">No notes yet</h3>
                         <p className="text-slate-500 text-sm mt-1">Tap the plus button to start writing.</p>
                         <button
                             onClick={() => setAddModalVisible(true)}
@@ -633,9 +635,9 @@ const Notes = () => {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-white rounded-2xl p-6 w-full max-w-sm"
+                        className="dark:bg-slate-800 bg-white rounded-2xl p-6 w-full max-w-sm"
                     >
-                        <h3 className="text-xl font-bold mb-4">Sort By</h3>
+                        <h3 className="text-xl font-bold mb-4 dark:text-white text-slate-900">Sort By</h3>
                         {[
                             { id: 'newest', label: 'Newest First' },
                             { id: 'oldest', label: 'Oldest First' },
@@ -644,9 +646,9 @@ const Notes = () => {
                             <button
                                 key={opt.id}
                                 onClick={() => { setSortOption(opt.id); setSortModalVisible(false); }}
-                                className="w-full flex items-center justify-between py-3 border-b border-slate-200 hover:bg-slate-50"
+                                className="w-full flex items-center justify-between py-3 border-b dark:border-slate-700 border-slate-100 hover:dark:bg-slate-700 hover:bg-slate-50"
                             >
-                                <span className={`font-medium ${sortOption === opt.id ? 'text-blue-500' : 'text-slate-700'}`}>
+                                <span className={`font-medium ${sortOption === opt.id ? 'text-blue-500' : 'dark:text-slate-300 text-slate-700'}`}>
                                     {opt.label}
                                 </span>
                                 {sortOption === opt.id && <span className="text-blue-500">✓</span>}
@@ -660,21 +662,21 @@ const Notes = () => {
             {/* Add/Edit Modal (Native-Match Redesign) */}
             <AnimatePresence>
                 {(addModalVisible || editModalVisible) && (
-                    <div className="fixed inset-0 bg-[#0F172A] z-[100] flex flex-col sm:p-0">
+                    <div className="fixed inset-0 dark:bg-[#0F172A] bg-white z-[100] flex flex-col sm:p-0">
                         <motion.div
                             initial={{ y: '100%' }}
                             animate={{ y: 0 }}
                             exit={{ y: '100%' }}
                             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                            className="flex-1 flex flex-col h-full bg-[#0F172A] relative overflow-hidden"
+                            className="flex-1 flex flex-col h-full dark:bg-[#0F172A] bg-white relative overflow-hidden"
                         >
                             {/* Native Top Header */}
-                            <div className="px-4 py-3 flex items-center gap-3 bg-[#0F172A] safe-top z-20">
+                            <div className="px-4 py-3 flex items-center gap-3 dark:bg-[#0F172A] bg-white safe-top z-20">
                                 <button
                                     onClick={handleAutoSave}
-                                    className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5 transition-all"
+                                    className="w-10 h-10 flex items-center justify-center rounded-full dark:hover:bg-white/5 hover:bg-slate-100 transition-all"
                                 >
-                                    <MdArrowBack size={26} className="text-white" />
+                                    <MdArrowBack size={26} className="dark:text-white text-slate-900" />
                                 </button>
 
                                 <div className="flex-1 relative flex items-center">
@@ -683,7 +685,7 @@ const Notes = () => {
                                         placeholder="Find in note..."
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full bg-slate-900/50 border-none rounded-full py-2 px-4 text-sm text-slate-300 placeholder:text-slate-600 outline-none focus:ring-1 focus:ring-white/10"
+                                        className="w-full dark:bg-slate-900/50 bg-slate-100 border-none rounded-full py-2 px-4 text-sm dark:text-slate-300 text-slate-700 dark:placeholder:text-slate-600 placeholder:text-slate-400 outline-none focus:ring-1 focus:ring-blue-500/20"
                                     />
                                     {searchQuery && matchCount > 0 && (
                                         <div className="absolute right-3 px-2 py-0.5 bg-blue-600 rounded-lg text-[10px] font-black text-white shadow-lg">
@@ -695,15 +697,15 @@ const Notes = () => {
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => setNotePinned(!notePinned)}
-                                        className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${notePinned ? 'bg-blue-600/20 text-blue-400' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                                        className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${notePinned ? 'bg-blue-600/20 text-blue-500' : 'dark:text-slate-400 text-slate-400 dark:hover:text-white hover:text-slate-900 dark:hover:bg-white/5 hover:bg-slate-100'}`}
                                         title={notePinned ? "Unpin Note" : "Pin Note"}
                                     >
                                         <MdPushPin size={24} className={notePinned ? 'rotate-45' : ''} />
                                     </button>
-                                    <button className="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+                                    <button className="w-9 h-9 flex items-center justify-center dark:text-slate-400 text-slate-400 dark:hover:text-white hover:text-slate-900 transition-colors">
                                         <MdUndo size={24} />
                                     </button>
-                                    <button className="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+                                    <button className="w-9 h-9 flex items-center justify-center dark:text-slate-400 text-slate-400 dark:hover:text-white hover:text-slate-900 transition-colors">
                                         <MdRedo size={24} />
                                     </button>
                                     <button
@@ -711,7 +713,7 @@ const Notes = () => {
                                         disabled={isSavingNote}
                                         className={`w-10 h-10 flex items-center justify-center text-white rounded-full transition-all cursor-pointer ${isSavingNote
                                             ? 'bg-blue-600 opacity-70 cursor-not-allowed'
-                                            : 'hover:bg-white/5 hover:scale-110 active:scale-95'
+                                            : 'bg-blue-600 hover:bg-blue-700 hover:scale-110 active:scale-95'
                                             }`}
                                     >
                                         {isSavingNote ? (
@@ -752,7 +754,7 @@ const Notes = () => {
                                         placeholder="Title"
                                         rows={1}
                                         autoFocus={!editModalVisible}
-                                        className="w-full bg-transparent text-white text-[32px] font-black placeholder:text-slate-800 outline-none mb-6 leading-tight font-outfit resize-none overflow-hidden"
+                                        className="w-full bg-transparent dark:text-white text-slate-900 text-[32px] font-black dark:placeholder:text-slate-800 placeholder:text-slate-300 outline-none mb-6 leading-tight font-outfit resize-none overflow-hidden"
                                         style={{ height: 'auto' }}
                                         onInput={(e) => {
                                             e.target.style.height = 'auto';
@@ -843,18 +845,18 @@ const Notes = () => {
                                             animate={{ y: 0 }}
                                             exit={{ y: '100%' }}
                                             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                                            className="relative w-full max-w-lg bg-[#1E293B] rounded-t-[2.5rem] p-8 shadow-3xl"
+                                            className="relative w-full max-w-lg dark:bg-slate-800 bg-white rounded-t-[2.5rem] p-8 shadow-3xl"
                                         >
-                                            <h3 className="text-center text-slate-400 font-bold mb-6 tracking-wide">Add Attachment</h3>
+                                            <h3 className="text-center dark:text-slate-400 text-slate-500 font-bold mb-6 tracking-wide">Add Attachment</h3>
                                             <div className="space-y-3">
                                                 <button
                                                     onClick={() => {
                                                         setAttachmentMenuVisible(false);
                                                         document.getElementById('note-camera-input').click();
                                                     }}
-                                                    className="w-full bg-[#0F172A] p-5 rounded-2xl flex items-center gap-4 text-white hover:bg-slate-800 transition-colors"
+                                                    className="w-full dark:bg-slate-950 bg-slate-100 p-5 rounded-2xl flex items-center gap-4 dark:text-white text-slate-900 dark:hover:bg-slate-900 hover:bg-slate-200 transition-colors"
                                                 >
-                                                    <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-blue-400">
+                                                    <div className="w-10 h-10 dark:bg-white/5 bg-white rounded-xl flex items-center justify-center text-blue-400">
                                                         <MdPhotoCamera size={24} />
                                                     </div>
                                                     <span className="font-bold text-lg">Take Photo</span>
@@ -864,16 +866,16 @@ const Notes = () => {
                                                         setAttachmentMenuVisible(false);
                                                         document.getElementById('note-image-input').click();
                                                     }}
-                                                    className="w-full bg-[#0F172A] p-5 rounded-2xl flex items-center gap-4 text-white hover:bg-slate-800 transition-colors"
+                                                    className="w-full dark:bg-slate-950 bg-slate-100 p-5 rounded-2xl flex items-center gap-4 dark:text-white text-slate-900 dark:hover:bg-slate-900 hover:bg-slate-200 transition-colors"
                                                 >
-                                                    <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-indigo-400">
+                                                    <div className="w-10 h-10 dark:bg-white/5 bg-white rounded-xl flex items-center justify-center text-indigo-400">
                                                         <MdAdd size={24} />
                                                     </div>
                                                     <span className="font-bold text-lg">Choose from Library</span>
                                                 </button>
                                                 <button
                                                     onClick={() => setAttachmentMenuVisible(false)}
-                                                    className="w-full bg-slate-800 p-5 rounded-2xl flex items-center justify-center text-slate-400 font-bold text-lg mt-2 border border-white/5"
+                                                    className="w-full dark:bg-slate-900 bg-slate-50 p-5 rounded-2xl flex items-center justify-center dark:text-slate-400 text-slate-500 font-bold text-lg mt-2 dark:border-white/5 border-slate-200 border"
                                                 >
                                                     Cancel
                                                 </button>
@@ -891,29 +893,29 @@ const Notes = () => {
                                             initial={{ opacity: 0, scale: 0.9 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             exit={{ opacity: 0, scale: 0.9 }}
-                                            className="bg-[#1E293B] border border-white/10 rounded-[2.5rem] p-8 w-full max-w-md shadow-3xl flex flex-col max-h-[80vh]"
+                                            className="dark:bg-slate-800 bg-white dark:border-white/10 border-slate-200 border rounded-[2.5rem] p-8 w-full max-w-md shadow-3xl flex flex-col max-h-[80vh]"
                                         >
                                             <div className="flex justify-between items-center mb-6">
-                                                <h3 className="text-xl font-black text-white font-outfit uppercase tracking-wider">Link Connection</h3>
-                                                <button onClick={() => { setShowTaskPicker(false); setModalSearchQuery(''); }} className="p-2 hover:bg-white/5 rounded-full text-slate-400"><MdClose size={24} /></button>
+                                                <h3 className="text-xl font-black dark:text-white text-slate-900 font-outfit uppercase tracking-wider">Link Connection</h3>
+                                                <button onClick={() => { setShowTaskPicker(false); setModalSearchQuery(''); }} className="p-2 dark:hover:bg-white/5 hover:bg-slate-100 rounded-full dark:text-slate-400 text-slate-500"><MdClose size={24} /></button>
                                             </div>
 
                                             {/* Search Bar in Modal */}
                                             <div className="relative mb-6">
-                                                <MdSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
+                                                <MdSearch className="absolute left-4 top-1/2 -translate-y-1/2 dark:text-slate-500 text-slate-400" size={20} />
                                                 <input
                                                     type="text"
                                                     placeholder="Search tasks..."
                                                     value={modalSearchQuery}
                                                     onChange={(e) => setModalSearchQuery(e.target.value)}
-                                                    className="w-full bg-[#0F172A] border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-white outline-none focus:border-blue-500 transition-all font-bold placeholder:text-slate-700"
+                                                    className="w-full dark:bg-slate-950 bg-slate-50 dark:border-white/5 border-slate-200 border rounded-2xl py-4 pl-12 pr-4 dark:text-white text-slate-900 outline-none focus:border-blue-500 transition-all font-bold dark:placeholder:text-slate-700 placeholder:text-slate-400"
                                                 />
                                             </div>
 
                                             <div className="flex-1 overflow-y-auto space-y-3 no-scrollbar pr-1">
                                                 <button
                                                     onClick={() => { setLinkedTaskId(''); setShowTaskPicker(false); setModalSearchQuery(''); }}
-                                                    className={`w-full p-5 rounded-2xl text-left font-bold transition-all border flex items-center justify-between ${linkedTaskId === '' ? 'bg-blue-600 border-blue-400 text-white shadow-lg shadow-blue-500/30' : 'bg-[#0F172A] border-white/5 text-slate-400'
+                                                    className={`w-full p-5 rounded-2xl text-left font-bold transition-all border flex items-center justify-between ${linkedTaskId === '' ? 'bg-blue-600 border-blue-400 text-white shadow-lg shadow-blue-500/30' : 'dark:bg-slate-900 bg-slate-50 dark:border-white/5 border-slate-100 dark:text-slate-400 text-slate-500'
                                                         }`}
                                                 >
                                                     <span>Personal Thought (No Link)</span>
@@ -923,7 +925,7 @@ const Notes = () => {
                                                     <button
                                                         key={task.id}
                                                         onClick={() => { setLinkedTaskId(task.id); setShowTaskPicker(false); setModalSearchQuery(''); }}
-                                                        className={`w-full p-5 rounded-2xl text-left font-bold transition-all border flex items-center justify-between ${linkedTaskId === task.id ? 'bg-blue-600 border-blue-400 text-white shadow-lg shadow-blue-500/30' : 'bg-[#0F172A] border-white/5 text-slate-400 hover:bg-slate-800'
+                                                        className={`w-full p-5 rounded-2xl text-left font-bold transition-all border flex items-center justify-between ${linkedTaskId === task.id ? 'bg-blue-600 border-blue-400 text-white shadow-lg shadow-blue-500/30' : 'dark:bg-slate-900 bg-slate-50 dark:border-white/5 border-slate-100 dark:text-slate-400 text-slate-500 hover:dark:bg-slate-800 hover:bg-slate-100'
                                                             }`}
                                                     >
                                                         <span className="truncate">{task.title}</span>
@@ -941,23 +943,23 @@ const Notes = () => {
 
                             {/* Native Bottom Toolbelt */}
                             <div className="fixed bottom-6 left-6 right-6 z-30 pointer-events-auto">
-                                <div className="max-w-md mx-auto bg-slate-100/95 backdrop-blur-2xl rounded-full p-2 flex items-center justify-around shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] border border-white">
+                                <div className="max-w-md mx-auto dark:bg-slate-100/95 bg-slate-900/95 backdrop-blur-2xl rounded-full p-2 flex items-center justify-around shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] border dark:border-white border-slate-700">
                                     <button
                                         onClick={() => setAttachmentMenuVisible(true)}
-                                        className="w-12 h-12 rounded-full flex items-center justify-center text-slate-900 hover:bg-black/5 active:scale-90 transition-all"
+                                        className="w-12 h-12 rounded-full flex items-center justify-center dark:text-slate-900 text-white dark:hover:bg-black/5 hover:bg-white/10 active:scale-90 transition-all"
                                     >
                                         <MdPhotoCamera size={26} />
                                     </button>
                                     <button
                                         onClick={() => toast('Drawing mode is currently in development!')}
-                                        className="w-12 h-12 rounded-full flex items-center justify-center text-slate-900 hover:bg-black/5 active:scale-90 transition-all"
+                                        className="w-12 h-12 rounded-full flex items-center justify-center dark:text-slate-900 text-white dark:hover:bg-black/5 hover:bg-white/10 active:scale-90 transition-all"
                                     >
                                         <MdCreate size={26} className="rotate-90" />
                                     </button>
                                     <button
                                         onClick={handleGrammarCheck}
                                         disabled={isCheckingGrammar}
-                                        className={`w-12 h-12 rounded-full flex items-center justify-center text-slate-900 transition-all ${isCheckingGrammar ? 'bg-blue-100 animate-pulse' : 'hover:bg-black/5 active:scale-90'
+                                        className={`w-12 h-12 rounded-full flex items-center justify-center dark:text-slate-900 text-white transition-all ${isCheckingGrammar ? 'bg-blue-100 animate-pulse' : 'dark:hover:bg-black/5 hover:bg-white/10 active:scale-90'
                                             }`}
                                     >
                                         <MdSpellcheck size={28} />
@@ -965,14 +967,14 @@ const Notes = () => {
 
                                     <button
                                         onClick={() => setShowTaskPicker(true)}
-                                        className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${linkedTaskId ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'text-slate-900 hover:bg-black/5 active:scale-90'
+                                        className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${linkedTaskId ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'dark:text-slate-900 text-white dark:hover:bg-black/5 hover:bg-white/10 active:scale-90'
                                             }`}
                                     >
                                         <MdLink size={26} />
                                     </button>
                                     <button
                                         onClick={() => handleShare(noteTitle, noteContent, noteToEdit ? (noteToEdit.date || noteToEdit.created_at) : new Date())}
-                                        className="w-12 h-12 rounded-full flex items-center justify-center text-slate-900 hover:bg-black/5 active:scale-90 transition-all"
+                                        className="w-12 h-12 rounded-full flex items-center justify-center dark:text-slate-900 text-white dark:hover:bg-black/5 hover:bg-white/10 active:scale-90 transition-all"
                                     >
                                         <MdShare size={26} />
                                     </button>

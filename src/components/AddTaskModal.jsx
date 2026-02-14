@@ -98,27 +98,27 @@ const AddTaskModal = ({ visible, onClose, onAdd, onUpdate, initialDate, taskToEd
                 initial={{ y: '100%', opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: '100%', opacity: 0 }}
-                className="bg-slate-800 rounded-t-[2.5rem] md:rounded-[2.5rem] w-full md:max-w-3xl max-h-[94vh] flex flex-col shadow-2xl relative"
+                className="dark:bg-slate-800 bg-white rounded-t-[2.5rem] md:rounded-[2.5rem] w-full md:max-w-3xl max-h-[94vh] flex flex-col shadow-2xl relative transition-colors duration-300"
             >
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b border-slate-700">
+                <div className="flex items-center justify-between p-4 border-b dark:border-slate-700 border-slate-200">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
-                            <MdAdd size={24} className="text-blue-400" />
+                            <MdAdd size={24} className="text-blue-500" />
                         </div>
-                        <h2 className="text-lg font-bold text-white">
+                        <h2 className="text-lg font-bold dark:text-white text-slate-900">
                             {taskToEdit ? 'Edit Task' : 'New Task'}
                         </h2>
                     </div>
                     <div className="flex gap-2">
                         <button
                             onClick={() => toast('Grammar check coming soon!')}
-                            className="p-2 hover:bg-slate-700 rounded-lg"
+                            className="p-2 dark:hover:bg-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
                         >
-                            <MdSpellcheck size={22} className="text-blue-400" />
+                            <MdSpellcheck size={22} className="text-blue-500" />
                         </button>
-                        <button onClick={onClose} className="p-2 hover:bg-slate-700 rounded-lg">
-                            <MdClose size={24} className="text-slate-400" />
+                        <button onClick={onClose} className="p-2 dark:hover:bg-slate-700 hover:bg-slate-100 rounded-lg transition-colors">
+                            <MdClose size={24} className="dark:text-slate-400 text-slate-500" />
                         </button>
                     </div>
                 </div>
@@ -144,8 +144,8 @@ const AddTaskModal = ({ visible, onClose, onAdd, onUpdate, initialDate, taskToEd
                                         }
                                     }}
                                     className={`flex flex-col items-center gap-1.5 p-3 rounded-2xl border-2 transition-all cursor-pointer ${type === taskType.id
-                                        ? 'bg-blue-600/10 border-blue-500 text-blue-400'
-                                        : 'bg-slate-900/50 border-white/5 text-slate-500 hover:border-white/10'
+                                        ? 'bg-blue-600/10 border-blue-500 text-blue-500'
+                                        : 'dark:bg-slate-900/50 bg-slate-50 dark:border-white/5 border-slate-200 dark:text-slate-500 text-slate-600 hover:border-blue-200 dark:hover:border-white/10'
                                         }`}
                                 >
                                     <span className="text-xl">
@@ -169,7 +169,7 @@ const AddTaskModal = ({ visible, onClose, onAdd, onUpdate, initialDate, taskToEd
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder="Task title"
-                            className="w-full bg-slate-900 text-white text-base font-semibold rounded-lg p-3 border border-slate-700 focus:border-blue-500 outline-none"
+                            className="w-full dark:bg-slate-900 bg-slate-50 dark:text-white text-slate-900 text-base font-semibold rounded-lg p-3 dark:border-slate-700 border-slate-200 focus:border-blue-500 outline-none transition-colors"
                             autoFocus
                         />
                     </div>
@@ -180,7 +180,7 @@ const AddTaskModal = ({ visible, onClose, onAdd, onUpdate, initialDate, taskToEd
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             placeholder="Add description (optional) - URLs will be clickable!"
-                            className="w-full bg-slate-900 text-white rounded-lg p-3 border border-slate-700 focus:border-blue-500 outline-none resize-none"
+                            className="w-full dark:bg-slate-900 bg-slate-50 dark:text-white text-slate-900 rounded-lg p-3 dark:border-slate-700 border-slate-200 focus:border-blue-500 outline-none resize-none transition-colors"
                             rows={4}
                         />
                     </div>
@@ -190,24 +190,24 @@ const AddTaskModal = ({ visible, onClose, onAdd, onUpdate, initialDate, taskToEd
                         <div>
                             <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 block">Date</label>
                             <div className="relative">
-                                <MdCalendarToday className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400" size={18} />
+                                <MdCalendarToday className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-500" size={18} />
                                 <input
                                     type="date"
                                     value={dueDate}
                                     onChange={(e) => setDueDate(e.target.value)}
-                                    className="w-full bg-slate-900 text-white rounded-lg p-2 pl-10 border border-slate-700 focus:border-blue-500 outline-none text-sm cursor-pointer"
+                                    className="w-full dark:bg-slate-900 bg-slate-50 dark:text-white text-slate-900 rounded-lg p-2 pl-10 dark:border-slate-700 border-slate-200 focus:border-blue-500 outline-none text-sm cursor-pointer transition-colors"
                                 />
                             </div>
                         </div>
                         <div>
                             <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 block">Time</label>
                             <div className="relative">
-                                <MdAccessTime className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400" size={18} />
+                                <MdAccessTime className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-500" size={18} />
                                 <input
                                     type="time"
                                     value={dueTime}
                                     onChange={(e) => setDueTime(e.target.value)}
-                                    className="w-full bg-slate-900 text-white rounded-lg p-2 pl-10 border border-slate-700 focus:border-blue-500 outline-none text-sm cursor-pointer"
+                                    className="w-full dark:bg-slate-900 bg-slate-50 dark:text-white text-slate-900 rounded-lg p-2 pl-10 dark:border-slate-700 border-slate-200 focus:border-blue-500 outline-none text-sm cursor-pointer transition-colors"
                                 />
                             </div>
                         </div>
@@ -223,7 +223,7 @@ const AddTaskModal = ({ visible, onClose, onAdd, onUpdate, initialDate, taskToEd
                                     onClick={() => setPriority(level.id)}
                                     className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg border transition-all cursor-pointer ${priority === level.id
                                         ? 'text-white border-transparent'
-                                        : 'bg-slate-900 text-slate-400 border-slate-700 hover:border-slate-600'
+                                        : 'dark:bg-slate-900 bg-slate-50 text-slate-400 dark:border-slate-700 border-slate-200 hover:border-slate-400'
                                         }`}
                                     style={priority === level.id ? { backgroundColor: level.color } : {}}
                                 >
@@ -237,15 +237,15 @@ const AddTaskModal = ({ visible, onClose, onAdd, onUpdate, initialDate, taskToEd
                     {/* Daily Habit Toggle */}
                     <button
                         onClick={() => setIsHabit(!isHabit)}
-                        className="w-full flex items-center justify-between bg-slate-900 p-3 rounded-lg border border-slate-700 hover:border-slate-600 transition-all mb-4 cursor-pointer"
+                        className="w-full flex items-center justify-between dark:bg-slate-900 bg-slate-50 p-3 rounded-lg dark:border-slate-700 border-slate-200 hover:border-blue-400 transition-all mb-4 cursor-pointer"
                     >
                         <div className="flex items-center gap-3">
                             <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isHabit ? 'bg-blue-500' : 'bg-blue-500/20'
                                 }`}>
-                                <MdRepeat size={18} className={isHabit ? 'text-white' : 'text-blue-400'} />
+                                <MdRepeat size={18} className={isHabit ? 'text-white' : 'text-blue-500'} />
                             </div>
                             <div className="text-left">
-                                <p className="text-sm font-semibold text-white">Daily Habit</p>
+                                <p className="text-sm font-semibold dark:text-white text-slate-900">Daily Habit</p>
                                 <p className="text-xs text-slate-400">Repeat this task every day</p>
                             </div>
                         </div>
@@ -258,11 +258,11 @@ const AddTaskModal = ({ visible, onClose, onAdd, onUpdate, initialDate, taskToEd
                 </div>
 
                 {/* Footer - Guaranteed visible with safe area padding */}
-                <div className="p-6 pb-10 border-t border-slate-700 bg-slate-800 rounded-b-[2.5rem]">
+                <div className="p-6 pb-10 border-t dark:border-slate-700 border-slate-200 dark:bg-slate-800 bg-white rounded-b-[2.5rem]">
                     <div className="flex gap-3 max-w-lg mx-auto">
                         <button
                             onClick={onClose}
-                            className="flex-1 py-4 bg-slate-700 text-white rounded-3xl hover:bg-slate-600 transition-all font-black uppercase tracking-widest text-xs cursor-pointer"
+                            className="flex-1 py-4 dark:bg-slate-700 bg-slate-100 dark:text-white text-slate-700 rounded-3xl dark:hover:bg-slate-600 hover:bg-slate-200 transition-all font-black uppercase tracking-widest text-xs cursor-pointer"
                         >
                             Cancel
                         </button>
@@ -271,7 +271,7 @@ const AddTaskModal = ({ visible, onClose, onAdd, onUpdate, initialDate, taskToEd
                             disabled={!title.trim()}
                             className={`flex-1 py-4 rounded-3xl font-black uppercase tracking-widest text-xs transition-all flex items-center justify-center gap-2 cursor-pointer ${title.trim()
                                 ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/30'
-                                : 'bg-slate-700 text-slate-500 cursor-not-allowed opacity-50'
+                                : 'dark:bg-slate-700 bg-slate-200 dark:text-slate-500 text-slate-400 cursor-not-allowed opacity-50'
                                 }`}
                         >
                             <MdAdd size={22} />

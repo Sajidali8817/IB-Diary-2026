@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { apiService } from '../services/api';
 import { useAppContext } from '../context/AppContext';
 import toast from 'react-hot-toast';
+import ThemeToggle from '../components/ThemeToggle';
 
 const AddScheduler = () => {
     const { userRole, userProfile } = useAppContext();
@@ -340,19 +341,22 @@ Details available in the portal.`
     };
 
     return (
-        <div className="min-h-screen bg-slate-950 pb-40">
+        <div className="min-h-screen dark:bg-slate-950 bg-slate-50 pb-40 transition-colors duration-300">
             {/* Header */}
-            <div className="bg-slate-900/50 backdrop-blur-xl sticky top-0 z-30 border-b border-white/5 mb-10">
+            <div className="dark:bg-slate-900/50 bg-white/50 backdrop-blur-xl sticky top-0 z-30 dark:border-white/5 border-slate-200 border-b mb-10">
                 <header className="flex items-center gap-4 p-6">
                     <button
                         onClick={() => navigate(-1)}
-                        className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white cursor-pointer"
+                        className="w-12 h-12 rounded-2xl dark:bg-slate-900 bg-white flex items-center justify-center dark:text-white text-slate-900 cursor-pointer shadow-sm border dark:border-transparent border-slate-200"
                     >
                         <MdArrowBack size={24} />
                     </button>
                     <div>
-                        <h1 className="text-2xl font-black text-white font-outfit leading-none mb-1">New Schedule</h1>
+                        <h1 className="text-2xl font-black dark:text-white text-slate-900 font-outfit leading-none mb-1">New Schedule</h1>
                         <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Create Automated Message</p>
+                    </div>
+                    <div className="ml-auto">
+                        <ThemeToggle />
                     </div>
                 </header>
             </div>
@@ -364,13 +368,13 @@ Details available in the portal.`
                     <Section title="Recipient (HOD)" icon={<MdAccountCircle />} className="relative z-20">
                         {!selectedHOD ? (
                             <div className="relative z-50">
-                                <MdSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
+                                <MdSearch className="absolute left-4 top-1/2 -translate-y-1/2 dark:text-slate-500 text-slate-400" size={20} />
                                 <input
                                     type="text"
                                     placeholder="Search by name or department..."
                                     value={hodSearch}
                                     onChange={(e) => setHodSearch(e.target.value)}
-                                    className="w-full bg-slate-900 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-white outline-none focus:border-blue-500 transition-all font-bold placeholder:text-slate-700"
+                                    className="w-full dark:bg-slate-950 bg-slate-50 dark:border-white/5 border-slate-200 border rounded-2xl py-4 pl-12 pr-4 dark:text-white text-slate-900 outline-none focus:border-blue-500 transition-all font-bold dark:placeholder:text-slate-700 placeholder:text-slate-400"
                                 />
 
                                 <AnimatePresence>
@@ -379,20 +383,20 @@ Details available in the portal.`
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: 10 }}
-                                            className="absolute top-full left-0 right-0 mt-2 bg-slate-900 border border-white/5 rounded-2xl overflow-hidden z-20 shadow-2xl"
+                                            className="absolute top-full left-0 right-0 mt-2 dark:bg-slate-900 bg-white dark:border-white/5 border-slate-200 border rounded-2xl overflow-hidden z-20 shadow-2xl"
                                         >
                                             {hodSuggestions.length > 0 ? (
                                                 hodSuggestions.map(hod => (
                                                     <button
                                                         key={hod.id}
                                                         onClick={() => handleSelectHOD(hod)}
-                                                        className="w-full p-4 hover:bg-white/5 flex items-center gap-4 text-left border-b border-white/5 last:border-0 cursor-pointer"
+                                                        className="w-full p-4 dark:hover:bg-white/5 hover:bg-slate-50 flex items-center gap-4 text-left dark:border-white/5 border-slate-100 border-b last:border-0 cursor-pointer"
                                                     >
-                                                        <div className="w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center font-black">
+                                                        <div className="w-10 h-10 rounded-full dark:bg-blue-500/10 bg-blue-50 text-blue-500 flex items-center justify-center font-black">
                                                             {(hod.name || 'U').charAt(0)}
                                                         </div>
                                                         <div>
-                                                            <p className="text-white font-bold">{hod.name || 'Unknown'}</p>
+                                                            <p className="dark:text-white text-slate-900 font-bold">{hod.name || 'Unknown'}</p>
                                                             <p className="text-slate-500 text-xs">{hod.dept || hod.department || 'No Dept'}</p>
                                                         </div>
                                                     </button>
@@ -400,7 +404,7 @@ Details available in the portal.`
                                             ) : hodSearch.length > 1 && (
                                                 <div className="p-8 text-center">
                                                     <div className="text-2xl mb-2">🔍</div>
-                                                    <p className="text-white font-bold text-sm">No HODs found</p>
+                                                    <p className="dark:text-white text-slate-900 font-bold text-sm">No HODs found</p>
                                                     <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest mt-1">Try a different name</p>
                                                 </div>
                                             )}
@@ -409,17 +413,17 @@ Details available in the portal.`
                                 </AnimatePresence>
                             </div>
                         ) : (
-                            <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-4 flex items-center justify-between">
+                            <div className="dark:bg-blue-500/10 bg-blue-50 dark:border-blue-500/20 border-blue-100 border rounded-2xl p-4 flex items-center justify-between">
                                 <div className="flex items-center gap-4">
                                     <div className="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center font-black text-lg">
                                         {selectedHOD.name.charAt(0)}
                                     </div>
                                     <div>
-                                        <p className="text-white font-black">{selectedHOD.name}</p>
+                                        <p className="dark:text-white text-slate-900 font-black">{selectedHOD.name}</p>
                                         <p className="text-blue-400 text-xs font-bold uppercase tracking-widest">{selectedHOD.dept}</p>
                                     </div>
                                 </div>
-                                <button onClick={() => { setSelectedHOD(null); setHodSearch(''); }} className="text-slate-500 hover:text-white transition-colors">
+                                <button onClick={() => { setSelectedHOD(null); setHodSearch(''); }} className="text-slate-500 hover:dark:text-white hover:text-slate-900 transition-colors">
                                     <MdClose size={24} />
                                 </button>
                             </div>
@@ -437,7 +441,7 @@ Details available in the portal.`
                                         placeholder={messageMode === 'EMAIL' ? "Recipient Email" : "Recipient Mobile"}
                                         value={formData.toAddress}
                                         onChange={(e) => setFormData({ ...formData, toAddress: e.target.value })}
-                                        className="w-full bg-slate-900 border border-white/5 rounded-2xl p-4 text-white font-bold outline-none focus:border-blue-500 transition-all placeholder:text-slate-800"
+                                        className="w-full dark:bg-slate-950 bg-slate-50 dark:border-white/5 border-slate-200 border rounded-2xl p-4 dark:text-white text-slate-900 font-bold outline-none focus:border-blue-500 transition-all dark:placeholder:text-slate-800 placeholder:text-slate-400"
                                     />
                                 </div>
                                 {messageMode === 'EMAIL' && (
@@ -448,7 +452,7 @@ Details available in the portal.`
                                             placeholder="Optional email..."
                                             value={formData.cc}
                                             onChange={(e) => setFormData({ ...formData, cc: e.target.value })}
-                                            className="w-full bg-slate-900 border border-white/5 rounded-2xl p-4 text-white font-bold outline-none focus:border-blue-500 transition-all placeholder:text-slate-800"
+                                            className="w-full dark:bg-slate-950 bg-slate-50 dark:border-white/5 border-slate-200 border rounded-2xl p-4 dark:text-white text-slate-900 font-bold outline-none focus:border-blue-500 transition-all dark:placeholder:text-slate-800 placeholder:text-slate-400"
                                         />
                                     </div>
                                 )}
@@ -460,7 +464,7 @@ Details available in the portal.`
                     <Section title="Message Details" icon={<MdSend />}>
                         <div className="space-y-6">
                             {/* Mode Switcher */}
-                            <div className="bg-slate-900 rounded-2xl p-1 flex gap-1">
+                            <div className="dark:bg-slate-950 bg-slate-100 rounded-2xl p-1 flex gap-1">
                                 <button
                                     onClick={() => {
                                         setMessageMode('EMAIL');
@@ -503,7 +507,7 @@ Details available in the portal.`
                                             onClick={() => handleSelectTemplate(key)}
                                             className={`p-4 rounded-2xl border flex flex-col items-center gap-2 transition-all cursor-pointer ${selectedTemplate === key
                                                 ? 'bg-blue-500/10 border-blue-500 text-blue-500'
-                                                : 'bg-slate-900 border-white/5 text-slate-500 hover:border-white/10'
+                                                : 'dark:bg-slate-950 bg-white dark:border-white/5 border-slate-200 text-slate-500 dark:hover:border-white/10 hover:border-blue-200 hover:bg-slate-50'
                                                 }`}
                                         >
                                             <span className="text-2xl">{template.icon}</span>
@@ -514,17 +518,17 @@ Details available in the portal.`
                             </div>
 
                             {messageMode === 'EMAIL' && (
-                                <div className="space-y-2 bg-slate-950/50 p-4 rounded-2xl border border-white/5">
+                                <div className="space-y-2 dark:bg-slate-950/50 bg-slate-50 p-4 rounded-2xl dark:border-white/5 border-slate-200 border">
                                     <div className="flex items-center gap-3">
                                         <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest w-12 shrink-0">From:</span>
                                         <span className="text-blue-400 font-bold text-xs truncate">{userProfile?.email || 'system@ibgroup.co.in'}</span>
                                     </div>
-                                    <div className="flex items-center gap-3 border-t border-white/5 pt-2">
+                                    <div className="flex items-center gap-3 dark:border-white/5 border-slate-200 border-t pt-2">
                                         <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest w-12 shrink-0">To:</span>
                                         <span className="text-emerald-400 font-bold text-xs truncate">{formData.toAddress || 'Select recipient'}</span>
                                     </div>
                                     {formData.cc && (
-                                        <div className="flex items-center gap-3 border-t border-white/5 pt-2">
+                                        <div className="flex items-center gap-3 dark:border-white/5 border-slate-200 border-t pt-2">
                                             <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest w-12 shrink-0">CC:</span>
                                             <span className="text-amber-400 font-bold text-xs truncate">{formData.cc}</span>
                                         </div>
@@ -538,7 +542,7 @@ Details available in the portal.`
                                     placeholder="Subject of the email"
                                     value={formData.subject}
                                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                                    className="w-full bg-slate-900 border border-white/5 rounded-2xl p-4 text-white font-bold outline-none focus:border-blue-500 transition-all placeholder:text-slate-800"
+                                    className="w-full dark:bg-slate-950 bg-slate-50 dark:border-white/5 border-slate-200 border rounded-2xl p-4 dark:text-white text-slate-900 font-bold outline-none focus:border-blue-500 transition-all dark:placeholder:text-slate-800 placeholder:text-slate-400"
                                 />
                             )}
 
@@ -547,7 +551,7 @@ Details available in the portal.`
                                 placeholder="Type your message here..."
                                 value={formData.body}
                                 onChange={(e) => setFormData({ ...formData, body: e.target.value })}
-                                className="w-full bg-slate-900 border border-white/5 rounded-2xl p-4 text-white font-bold outline-none focus:border-blue-500 transition-all placeholder:text-slate-800 resize-none font-outfit"
+                                className="w-full dark:bg-slate-950 bg-slate-50 dark:border-white/5 border-slate-200 border rounded-2xl p-4 dark:text-white text-slate-900 font-bold outline-none focus:border-blue-500 transition-all dark:placeholder:text-slate-800 placeholder:text-slate-400 resize-none font-outfit"
                             />
                         </div>
                     </Section>
@@ -563,8 +567,7 @@ Details available in the portal.`
                                         type="date"
                                         value={date}
                                         onChange={(e) => setDate(e.target.value)}
-                                        style={{ colorScheme: 'dark' }}
-                                        className="w-full bg-slate-900 border border-white/5 rounded-2xl p-4 pl-12 text-white font-bold outline-none focus:border-blue-500 transition-all cursor-pointer"
+                                        className="w-full dark:bg-slate-950 bg-slate-50 dark:border-white/5 border-slate-200 border rounded-2xl p-4 pl-12 dark:text-white text-slate-900 font-bold outline-none focus:border-blue-500 transition-all cursor-pointer dark-[color-scheme:dark]"
                                     />
                                 </div>
                             </div>
@@ -576,8 +579,7 @@ Details available in the portal.`
                                         type="time"
                                         value={time}
                                         onChange={(e) => setTime(e.target.value)}
-                                        style={{ colorScheme: 'dark' }}
-                                        className="w-full bg-slate-900 border border-white/5 rounded-2xl p-4 pl-12 text-white font-bold outline-none focus:border-blue-500 transition-all cursor-pointer"
+                                        className="w-full dark:bg-slate-950 bg-slate-50 dark:border-white/5 border-slate-200 border rounded-2xl p-4 pl-12 dark:text-white text-slate-900 font-bold outline-none focus:border-blue-500 transition-all cursor-pointer dark-[color-scheme:dark]"
                                     />
                                 </div>
                             </div>
@@ -603,10 +605,10 @@ Details available in the portal.`
 };
 
 const Section = ({ title, icon, children, className = '' }) => (
-    <div className={`bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8 ${className}`}>
+    <div className={`dark:bg-slate-900/40 bg-white/60 backdrop-blur-xl dark:border-white/5 border-slate-200 border rounded-[2.5rem] p-8 ${className}`}>
         <div className="flex items-center gap-3 mb-6">
             <div className="text-blue-500 text-xl">{icon}</div>
-            <h2 className="text-white font-black text-xl font-outfit uppercase tracking-tighter">{title}</h2>
+            <h2 className="dark:text-white text-slate-900 font-black text-xl font-outfit uppercase tracking-tighter">{title}</h2>
         </div>
         {children}
     </div>

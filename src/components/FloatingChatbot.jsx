@@ -164,33 +164,33 @@ const FloatingChatbot = ({ visible, onClose }) => {
     if (!visible) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-[100] flex items-center justify-center p-3 md:p-6">
+        <div className="fixed inset-0 dark:bg-black/60 bg-slate-900/20 backdrop-blur-md z-[100] flex items-center justify-center p-3 md:p-6">
             <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-slate-800 rounded-[2.5rem] w-full md:max-w-2xl h-[92dvh] md:h-[80vh] flex flex-col shadow-2xl overflow-hidden border border-white/5"
+                className="dark:bg-slate-800 bg-white rounded-[2.5rem] w-full md:max-w-2xl h-[92dvh] md:h-[80vh] flex flex-col shadow-2xl overflow-hidden dark:border-white/5 border-slate-200 border"
             >
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b border-slate-700">
+                <div className="flex items-center justify-between p-4 dark:border-slate-700 border-slate-100 border-b">
                     <div className="flex items-center gap-3">
                         <div className="w-11 h-11 rounded-full bg-blue-500 flex items-center justify-center">
                             <MdSmartToy size={24} className="text-white" />
                         </div>
                         <div>
-                            <h2 className="text-lg font-bold text-white">AI Assistant</h2>
-                            <p className="text-xs text-slate-400">Create tasks & notes with chat</p>
+                            <h2 className="text-lg font-bold dark:text-white text-slate-900">AI Assistant</h2>
+                            <p className="text-xs dark:text-slate-400 text-slate-500">Create tasks & notes with chat</p>
                         </div>
                     </div>
                     <div className="flex gap-2">
                         <button
                             onClick={() => setShowClearConfirm(true)}
-                            className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
+                            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
                         >
-                            <MdDelete size={24} className="text-slate-400" />
+                            <MdDelete size={24} className="dark:text-slate-400 text-slate-500" />
                         </button>
-                        <button onClick={onClose} className="p-2 hover:bg-slate-700 rounded-lg">
-                            <MdClose size={24} className="text-slate-400" />
+                        <button onClick={onClose} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg">
+                            <MdClose size={24} className="dark:text-slate-400 text-slate-500" />
                         </button>
                     </div>
                 </div>
@@ -208,7 +208,7 @@ const FloatingChatbot = ({ visible, onClose }) => {
                             <div className={`max-w-[80%] ${msg.sender === 'ai' ? '' : 'flex flex-col items-end'}`}>
                                 <div
                                     className={`rounded-2xl p-3 ${msg.sender === 'ai'
-                                        ? 'bg-slate-700 text-white'
+                                        ? 'dark:bg-slate-700 bg-slate-100 dark:text-white text-slate-900'
                                         : 'bg-blue-500 text-white'
                                         }`}
                                 >
@@ -220,20 +220,20 @@ const FloatingChatbot = ({ visible, onClose }) => {
                     ))}
                     {isTyping && (
                         <div className="flex justify-start">
-                            <div className="bg-slate-700 rounded-2xl p-3 flex items-center gap-2">
+                            <div className="dark:bg-slate-700 bg-slate-100 rounded-2xl p-3 flex items-center gap-2">
                                 <div className="flex gap-1">
-                                    <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                                    <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                                    <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                                    <div className="w-2 h-2 dark:bg-slate-400 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                                    <div className="w-2 h-2 dark:bg-slate-400 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                                    <div className="w-2 h-2 dark:bg-slate-400 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                                 </div>
-                                <span className="text-xs text-slate-400 italic">Thinking...</span>
+                                <span className="text-xs dark:text-slate-400 text-slate-500 italic">Thinking...</span>
                             </div>
                         </div>
                     )}
                 </div>
 
                 {/* Input */}
-                <div className="p-4 pb-10 md:pb-4 border-t border-slate-700">
+                <div className="p-4 pb-10 md:pb-4 dark:border-slate-700 border-slate-100 border-t">
                     <div className="flex items-end gap-2">
                         <textarea
                             value={input}
@@ -245,7 +245,7 @@ const FloatingChatbot = ({ visible, onClose }) => {
                                 }
                             }}
                             placeholder="Ask me anything..."
-                            className="flex-1 bg-slate-900 text-white rounded-2xl px-4 py-3 border border-slate-700 focus:border-blue-500 outline-none resize-none max-h-32 text-sm"
+                            className="flex-1 dark:bg-slate-900 bg-slate-50 dark:text-white text-slate-900 rounded-2xl px-4 py-3 dark:border-slate-700 border-slate-200 border focus:border-blue-500 outline-none resize-none max-h-32 text-sm"
                             rows={1}
                             maxLength={500}
                         />
@@ -253,7 +253,7 @@ const FloatingChatbot = ({ visible, onClose }) => {
                             onClick={isListening ? stopVoiceRecognition : startVoiceRecognition}
                             className={`w-11 h-11 rounded-full flex items-center justify-center transition-all ${isListening
                                 ? 'bg-red-500 text-white'
-                                : 'bg-slate-700 border border-blue-500 text-blue-400'
+                                : 'dark:bg-slate-700 bg-slate-100 border border-transparent dark:border-blue-500/30 text-blue-500'
                                 }`}
                         >
                             {isListening ? <MdMicOff size={22} /> : <MdMic size={22} />}
@@ -263,7 +263,7 @@ const FloatingChatbot = ({ visible, onClose }) => {
                             disabled={!input.trim()}
                             className={`w-11 h-11 rounded-full flex items-center justify-center transition-all ${input.trim()
                                 ? 'bg-blue-500 text-white hover:bg-blue-600'
-                                : 'bg-slate-700 text-slate-500'
+                                : 'dark:bg-slate-700 bg-slate-100 dark:text-slate-500 text-slate-400'
                                 }`}
                         >
                             <MdSend size={22} />

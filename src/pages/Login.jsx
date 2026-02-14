@@ -115,7 +115,7 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 sm:p-10">
+        <div className="min-h-screen dark:bg-slate-950 bg-white flex flex-col items-center justify-center p-4 sm:p-10 transition-colors duration-300">
             <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -131,7 +131,7 @@ const Login = () => {
                             <path d="M45,52 L52,59 L70,40" fill="none" stroke="#2563EB" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-[#0F172A] mb-1 sm:mb-2 font-outfit">Welcome Back</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold dark:text-white text-slate-900 mb-1 sm:mb-2 font-outfit">Welcome Back</h1>
                     <p className="text-sm sm:text-base text-slate-500 font-medium text-center mb-6 sm:mb-8">Sign in to continue to IB E-Diary</p>
                 </div>
 
@@ -139,7 +139,7 @@ const Login = () => {
                 <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
                     {/* Email */}
                     <div>
-                        <label className="block text-xs sm:text-sm font-bold text-[#0F172A] mb-1.5  ml-1">
+                        <label className="block text-xs sm:text-sm font-bold dark:text-white text-slate-900 mb-1.5 ml-1">
                             Email Address
                         </label>
                         <div className="relative flex items-center">
@@ -155,14 +155,14 @@ const Login = () => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 style={{ paddingLeft: '52px' }}
-                                className="w-full h-12 sm:h-14 pr-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl sm:rounded-2xl text-[#0F172A] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all font-medium text-sm sm:text-base"
+                                className="w-full h-12 sm:h-14 pr-4 dark:bg-slate-900 bg-slate-50 dark:border-white/5 border-slate-200 border rounded-xl sm:rounded-2xl dark:text-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all font-medium text-sm sm:text-base"
                             />
                         </div>
                     </div>
 
                     {/* Password */}
                     <div>
-                        <label className="block text-xs sm:text-sm font-bold text-[#0F172A] mb-1.5 sm:mb-2 ml-1">
+                        <label className="block text-xs sm:text-sm font-bold dark:text-white text-slate-900 mb-1.5 sm:mb-2 ml-1">
                             Password
                         </label>
                         <div className="relative flex items-center">
@@ -178,7 +178,7 @@ const Login = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 style={{ paddingLeft: '52px' }}
-                                className="w-full h-12 sm:h-14 pr-12 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl sm:rounded-2xl text-[#0F172A] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all font-medium text-sm sm:text-base"
+                                className="w-full h-12 sm:h-14 pr-12 dark:bg-slate-900 bg-slate-50 dark:border-white/5 border-slate-200 border rounded-xl sm:rounded-2xl dark:text-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all font-medium text-sm sm:text-base"
                             />
                             <button
                                 type="button"
@@ -217,7 +217,7 @@ const Login = () => {
                                     </svg>
                                 </motion.span>
                             </div>
-                            <span className="text-sm sm:text-base font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">
+                            <span className="text-sm sm:text-base font-semibold text-slate-500 group-hover:text-blue-500 transition-colors">
                                 Remember me
                             </span>
                         </label>
@@ -246,9 +246,9 @@ const Login = () => {
 
                     {/* Divider */}
                     <div className="flex items-center gap-4 py-1 sm:py-2">
-                        <div className="flex-1 h-px bg-slate-100"></div>
+                        <div className="flex-1 h-px dark:bg-slate-800 bg-slate-200"></div>
                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">or</span>
-                        <div className="flex-1 h-px bg-slate-100"></div>
+                        <div className="flex-1 h-px dark:bg-slate-800 bg-slate-200"></div>
                     </div>
 
                     {/* Guest Button */}
@@ -258,7 +258,7 @@ const Login = () => {
                         type="button"
                         onClick={handleGuestLogin}
                         disabled={loading}
-                        className="w-full h-12 sm:h-14 bg-white border border-slate-200 text-slate-700 rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base hover:border-slate-300 transition-all flex items-center justify-center shadow-sm"
+                        className="w-full h-12 sm:h-14 dark:bg-slate-900 bg-slate-50 dark:border-white/5 border-slate-200 border dark:text-slate-300 text-slate-700 rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base dark:hover:bg-slate-800 hover:bg-slate-100 transition-all flex items-center justify-center shadow-sm"
                     >
                         Continue as Guest
                     </motion.button>

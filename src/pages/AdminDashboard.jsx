@@ -4,6 +4,7 @@ import { MdAccountCircle, MdChevronRight } from 'react-icons/md';
 import { motion } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
 import { useEffect } from 'react';
+import ThemeToggle from '../components/ThemeToggle';
 
 const AdminDashboard = () => {
     const { userRole } = useAppContext();
@@ -26,12 +27,15 @@ const AdminDashboard = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-slate-950 pb-24">
+        <div className="min-h-screen dark:bg-slate-950 bg-slate-50 pb-24 transition-colors duration-300">
             {/* Header */}
-            <div className="bg-slate-900/50 backdrop-blur-xl sticky top-0 z-30 border-b border-white/5">
-                <header className="p-6">
-                    <h1 className="text-3xl font-black text-white font-outfit tracking-tight">Control Center</h1>
-                    <p className="text-slate-500 font-bold uppercase tracking-[0.2em] text-[10px] mt-2">Master Data Management</p>
+            <div className="dark:bg-slate-900/50 bg-white/50 backdrop-blur-xl sticky top-0 z-30 dark:border-white/5 border-slate-200 border-b">
+                <header className="p-6 flex items-center justify-between">
+                    <div className="flex-1">
+                        <h1 className="text-2xl font-black dark:text-white text-slate-900 font-outfit leading-none tracking-tight">Control Center</h1>
+                        <p className="text-blue-500 font-bold text-[10px] mt-2 uppercase tracking-widest leading-none">Management & Intelligence</p>
+                    </div>
+                    <ThemeToggle />
                 </header>
             </div>
 
@@ -46,27 +50,27 @@ const AdminDashboard = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 }}
                             onClick={() => navigate(item.path)}
-                            className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-3xl p-6 flex items-center gap-5 group hover:bg-slate-900/60 active:scale-[0.98] transition-all"
+                            className="w-full dark:bg-slate-900/40 bg-white backdrop-blur-xl dark:border-white/5 border-slate-200 border rounded-3xl p-6 flex items-center gap-5 group dark:hover:bg-slate-900/60 hover:bg-slate-50 active:scale-[0.98] transition-all shadow-sm hover:shadow-md"
                         >
                             <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center text-white shadow-xl shadow-black/20 group-hover:scale-110 transition-transform duration-300`}>
                                 {item.icon}
                             </div>
 
                             <div className="flex-1 text-left">
-                                <h3 className="text-lg font-black text-white leading-tight">{item.title}</h3>
+                                <h3 className="text-lg font-black dark:text-white text-slate-900 leading-tight">{item.title}</h3>
                                 <p className="text-slate-500 text-sm font-semibold mt-1">{item.subtitle}</p>
                             </div>
 
-                            <MdChevronRight size={24} className="text-slate-700 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
+                            <MdChevronRight size={24} className="dark:text-slate-700 text-slate-300 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
                         </motion.button>
                     ))}
                 </div>
 
                 {/* Stats Overview (Optional extra for PWA) */}
-                <div className="mt-12 p-8 rounded-[2.5rem] bg-gradient-to-br from-slate-900 via-slate-900 to-blue-900/20 border border-white/5 relative overflow-hidden">
+                <div className="mt-12 p-8 rounded-[2.5rem] dark:bg-gradient-to-br dark:from-slate-900 dark:via-slate-900 dark:to-blue-900/20 bg-gradient-to-br from-white via-white to-blue-50 dark:border-white/5 border-slate-200 border relative overflow-hidden transition-all duration-300">
                     <div className="relative z-10">
-                        <h4 className="text-white font-black text-lg">Quick Tip</h4>
-                        <p className="text-slate-400 text-sm font-medium mt-2 leading-relaxed">
+                        <h4 className="dark:text-white text-slate-900 font-black text-lg transition-colors">Quick Tip</h4>
+                        <p className="dark:text-slate-400 text-slate-600 text-sm font-medium mt-2 leading-relaxed transition-colors">
                             Master data changes reflect immediately across the Scheduler and Task modules.
                             Ensure HOD contact details are accurate for successful automated messaging.
                         </p>

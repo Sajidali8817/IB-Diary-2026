@@ -57,15 +57,12 @@ function App() {
                 position="top-right"
                 toastOptions={{
                     duration: 3000,
+                    className: 'dark:bg-slate-800 dark:text-white bg-white text-slate-900 shadow-xl border dark:border-white/10 border-slate-200',
                     style: {
                         borderRadius: '16px',
-                        background: '#1E293B',
-                        color: '#fff',
                         padding: '16px',
                         fontWeight: '600',
                         fontSize: '14px',
-                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.4)',
-                        border: '1px solid rgba(255,255,255,0.1)',
                     },
                     success: {
                         iconTheme: {

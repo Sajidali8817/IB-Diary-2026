@@ -1,30 +1,40 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-    const [darkMode, setDarkMode] = useState(() => {
-        const saved = localStorage.getItem('darkMode');
-        return saved ? JSON.parse(saved) : true; // Default to dark mode
+    // Check localStorage or system preference
+    const [theme, setTheme] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                return savedTheme;
+            }
+            // Default to dark per user preference for existing look
+            return 'dark';
+        }
+        return 'dark';
     });
 
     useEffect(() => {
-        localStorage.setItem('darkMode', JSON.stringify(darkMode));
+        const root = window.document.documentElement;
 
-        // Apply dark mode class to html element
-        if (darkMode) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    }, [darkMode]);
+        // Remove old classes
+        root.classList.remove('light', 'dark');
 
-    const toggleDarkMode = () => {
-        setDarkMode(prev => !prev);
+        // Add new class
+        root.classList.add(theme);
+
+        // Save to localStorage
+        localStorage.setItem('theme', theme);
+    }, [theme]);
+
+    const toggleTheme = () => {
+        setTheme(prev => prev === 'dark' ? 'light' : 'dark');
     };
 
     return (
-        <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
+        <ThemeContext.Provider value={{ theme, toggleTheme }}>
             {children}
         </ThemeContext.Provider>
     );
@@ -33,9 +43,7 @@ export const ThemeProvider = ({ children }) => {
 export const useTheme = () => {
     const context = useContext(ThemeContext);
     if (!context) {
-        throw new Error('useTheme must be used within ThemeProvider');
+        throw new Error('useTheme must be used within a ThemeProvider');
     }
     return context;
 };
-
-export default ThemeContext;

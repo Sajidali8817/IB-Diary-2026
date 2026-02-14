@@ -9,6 +9,7 @@ import { apiService } from '../../services/api';
 import { useAppContext } from '../../context/AppContext';
 import toast from 'react-hot-toast';
 import ConfirmModal from '../../components/ConfirmModal';
+import ThemeToggle from '../../components/ThemeToggle';
 
 const HatcheryManagement = () => {
     const { userRole } = useAppContext();
@@ -129,30 +130,31 @@ const HatcheryManagement = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-950 p-6 pb-24">
+        <div className="min-h-screen dark:bg-slate-950 bg-slate-50 p-6 pb-24 transition-colors duration-300">
             {/* Header */}
             <header className="flex items-center gap-4 mb-8">
                 <button
                     onClick={() => navigate('/admin')}
-                    className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-white"
+                    className="w-12 h-12 rounded-2xl dark:bg-slate-900 bg-white flex items-center justify-center dark:text-white text-slate-900 shadow-sm border dark:border-transparent border-slate-200"
                 >
                     <MdArrowBack size={24} />
                 </button>
                 <div className="flex-1">
-                    <h1 className="text-2xl font-black text-white font-outfit">Hatchery Management</h1>
+                    <h1 className="text-2xl font-black dark:text-white text-slate-900 font-outfit">Hatchery Management</h1>
                     <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">{hatcheries.length} Hatcheries Active</p>
                 </div>
+                <ThemeToggle />
             </header>
 
             {/* Search Bar */}
             <div className="relative mb-8">
-                <MdSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
+                <MdSearch className="absolute left-4 top-1/2 -translate-y-1/2 dark:text-slate-500 text-slate-400" size={20} />
                 <input
                     type="text"
                     placeholder="Search hatcheries..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="w-full bg-slate-900 border border-white/5 rounded-2xl py-4 pl-12 pr-4 text-white outline-none focus:border-amber-500 transition-all font-bold placeholder:text-slate-700"
+                    className="w-full dark:bg-slate-900 bg-white dark:border-white/5 border-slate-200 border rounded-2xl py-4 pl-12 pr-4 dark:text-white text-slate-900 outline-none focus:border-amber-500 transition-all font-bold dark:placeholder:text-slate-700 placeholder:text-slate-400 shadow-sm"
                 />
             </div>
 
@@ -160,39 +162,39 @@ const HatcheryManagement = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <AnimatePresence>
                     {loading ? (
-                        [...Array(6)].map((_, i) => <div key={i} className="h-40 bg-slate-900/40 rounded-3xl animate-pulse" />)
+                        [...Array(6)].map((_, i) => <div key={i} className="h-40 dark:bg-slate-900/40 bg-slate-100 rounded-3xl animate-pulse" />)
                     ) : Array.isArray(filteredHatcheries) && filteredHatcheries.map((hatchery, index) => (
                         <motion.div
                             key={hatchery.id}
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: index * 0.05 }}
-                            className="bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-3xl p-6 group hover:bg-slate-900/60 transition-all border-l-4 border-l-amber-500/50"
+                            className="dark:bg-slate-900/40 bg-white backdrop-blur-xl dark:border-white/5 border-slate-200 border rounded-3xl p-6 group dark:hover:bg-slate-900/60 hover:bg-slate-50 transition-all border-l-4 border-l-amber-500/50 shadow-sm hover:shadow-md"
                         >
                             <div className="flex items-start justify-between mb-4">
-                                <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-xl">
+                                <div className="w-12 h-12 rounded-xl dark:bg-amber-500/10 bg-amber-50 text-amber-500 flex items-center justify-center text-xl">
                                     <MdEgg size={24} />
                                 </div>
                                 <div className="flex gap-1">
-                                    <button onClick={() => openModal(hatchery)} className="p-2 hover:bg-white/5 rounded-xl text-slate-400 hover:text-blue-400 transition-all">
+                                    <button onClick={() => openModal(hatchery)} className="p-2 dark:hover:bg-white/5 hover:bg-slate-100 rounded-xl text-slate-400 hover:text-blue-500 transition-all">
                                         <MdEdit size={18} />
                                     </button>
-                                    <button onClick={() => handleDelete(hatchery.id)} className="p-2 hover:bg-white/5 rounded-xl text-slate-400 hover:text-red-400 transition-all">
+                                    <button onClick={() => handleDelete(hatchery.id)} className="p-2 dark:hover:bg-white/5 hover:bg-slate-100 rounded-xl text-slate-400 hover:text-red-500 transition-all">
                                         <MdDelete size={18} />
                                     </button>
                                 </div>
                             </div>
 
-                            <h3 className="text-white font-black text-lg mb-1 leading-tight">{hatchery.hatchery_name}</h3>
+                            <h3 className="dark:text-white text-slate-900 font-black text-lg mb-1 leading-tight">{hatchery.hatchery_name}</h3>
                             <div className="flex items-center gap-2 mb-4">
                                 <span className="px-2 py-0.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[10px] font-black uppercase tracking-widest">
                                     {hatchery.hatchery_code}
                                 </span>
                             </div>
 
-                            <div className="pt-4 border-t border-white/5">
+                            <div className="pt-4 dark:border-white/5 border-slate-100 border-t">
                                 <div className="flex items-center gap-2 text-slate-500">
-                                    <MdFactory size={14} className="text-slate-700" />
+                                    <MdFactory size={14} className="dark:text-slate-700 text-slate-400" />
                                     <span className="text-[10px] font-black uppercase tracking-widest truncate">{getPlantName(hatchery.plant_id)}</span>
                                 </div>
                             </div>
@@ -209,13 +211,13 @@ const HatcheryManagement = () => {
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-slate-900 border border-white/10 rounded-[2.5rem] w-full max-w-md p-8 shadow-3xl overflow-y-auto max-h-[90vh] no-scrollbar"
+                            className="dark:bg-slate-900 bg-white dark:border-white/10 border-slate-200 border rounded-[2.5rem] w-full max-w-md p-8 shadow-3xl overflow-y-auto max-h-[90vh] no-scrollbar"
                         >
                             <div className="flex justify-between items-center mb-8">
-                                <h2 className="text-2xl font-black text-white font-outfit uppercase tracking-tighter">
+                                <h2 className="text-2xl font-black dark:text-white text-slate-900 font-outfit uppercase tracking-tighter">
                                     {editingHatchery ? 'Edit Hatchery' : 'Add New Hatchery'}
                                 </h2>
-                                <button onClick={closeModal} className="p-2 hover:bg-white/5 rounded-full text-slate-400"><MdClose size={28} /></button>
+                                <button onClick={closeModal} className="p-2 dark:hover:bg-white/5 hover:bg-slate-100 rounded-full text-slate-400"><MdClose size={28} /></button>
                             </div>
 
                             <form onSubmit={handleSave} className="space-y-6">
@@ -232,7 +234,7 @@ const HatcheryManagement = () => {
                                                 onClick={() => setFormData({ ...formData, plant_id: p.id })}
                                                 className={`p-3 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all text-center ${formData.plant_id === p.id
                                                     ? 'bg-amber-500 border-amber-400 text-white shadow-lg shadow-amber-500/20'
-                                                    : 'bg-slate-950 border-white/5 text-slate-500 hover:bg-slate-900'
+                                                    : 'dark:bg-slate-950 bg-slate-50 dark:border-white/5 border-slate-200 dark:text-slate-500 text-slate-600 dark:hover:bg-slate-900 hover:bg-slate-100'
                                                     }`}
                                             >
                                                 {p.plant_name}
@@ -245,7 +247,7 @@ const HatcheryManagement = () => {
                                     <button
                                         type="button"
                                         onClick={closeModal}
-                                        className="flex-1 py-4 bg-slate-800 text-slate-300 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-slate-700 transition-all"
+                                        className="flex-1 py-4 dark:bg-slate-800 bg-slate-200 dark:text-slate-300 text-slate-700 rounded-2xl font-black uppercase tracking-widest text-xs dark:hover:bg-slate-700 hover:bg-slate-300 transition-all"
                                     >
                                         Cancel
                                     </button>
@@ -297,7 +299,7 @@ const InputField = ({ label, placeholder, value, onChange, type = "text", requir
             value={value}
             onChange={(e) => onChange(e.target.value)}
             required={required}
-            className="w-full bg-slate-950 border border-white/5 rounded-2xl p-4 text-white font-bold outline-none focus:border-amber-500 transition-all placeholder:text-slate-800"
+            className="w-full dark:bg-slate-950 bg-slate-50 dark:border-white/5 border-slate-200 border rounded-2xl p-4 dark:text-white text-slate-900 font-bold outline-none focus:border-amber-500 transition-all dark:placeholder:text-slate-800 placeholder:text-slate-400"
         />
     </div>
 );

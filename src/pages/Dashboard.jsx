@@ -20,6 +20,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import ConfirmModal from '../components/ConfirmModal';
 import AddTaskModal from '../components/AddTaskModal';
+import ThemeToggle from '../components/ThemeToggle';
 
 const Dashboard = () => {
     const [activeTab, setActiveTab] = useState('Daily');
@@ -244,9 +245,9 @@ const Dashboard = () => {
     const analyticsTabs = ['Daily', 'Week', 'Month'];
 
     return (
-        <div className="min-h-screen bg-slate-950 pb-24 overflow-x-hidden">
+        <div className="min-h-screen dark:bg-slate-950 bg-slate-50 pb-24 overflow-x-hidden transition-colors duration-300">
             {/* Header */}
-            <header className="bg-slate-900/50 backdrop-blur-xl sticky top-0 z-30 border-b border-white/5">
+            <header className="dark:bg-slate-900/50 bg-white/80 backdrop-blur-xl sticky top-0 z-30 dark:border-white/5 border-slate-200 border-b transition-colors duration-300">
                 <div className="px-6 py-5">
                     <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2.5 min-w-0 flex-1">
@@ -259,20 +260,22 @@ const Dashboard = () => {
                             </motion.div>
                             <div className="min-w-0 flex-1">
                                 <p className="text-slate-400 text-[9px] font-bold uppercase tracking-wider leading-none mb-1 whitespace-nowrap truncate">{getGreeting()}</p>
-                                <h1 className="text-white text-base font-black font-outfit leading-tight truncate">{userProfile.name || 'Guest'}</h1>
+                                <h1 className="dark:text-white text-slate-900 text-base font-black font-outfit leading-tight truncate">{userProfile.name || 'Guest'}</h1>
                             </div>
                         </div>
 
                         <div className="flex items-center gap-2 shrink-0">
-                            <div className="bg-[#1e293b]/80 backdrop-blur-md border border-white/10 px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 shadow-xl">
+                            <div className="dark:bg-[#1e293b]/80 bg-white/80 backdrop-blur-md dark:border-white/10 border-slate-200 border px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 shadow-xl">
                                 <span className="text-base">🔥</span>
-                                <span className="text-white font-black text-[9px] uppercase tracking-tighter whitespace-nowrap">{streak}-Day Streak</span>
+                                <span className="dark:text-white text-slate-900 font-black text-[9px] uppercase tracking-tighter whitespace-nowrap">{streak}-Day Streak</span>
                             </div>
 
 
+                            <ThemeToggle />
+
                             <button
                                 onClick={() => setShowLogoutConfirm(true)}
-                                className="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 hover:text-red-400 transition-colors shrink-0"
+                                className="w-10 h-10 rounded-xl dark:bg-slate-800 bg-white border dark:border-white/10 border-slate-200 flex items-center justify-center text-slate-400 hover:text-red-400 transition-colors shrink-0 shadow-lg dark:shadow-none"
                             >
                                 <MdLogout size={18} />
                             </button>
@@ -353,13 +356,13 @@ const Dashboard = () => {
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: idx * 0.05 }}
                             onClick={() => scrollToTaskDetails(item.tab, item.filter)}
-                            className="bg-white rounded-2xl p-4 shadow-md shadow-slate-200/50 flex items-center gap-3 cursor-pointer hover:shadow-lg transition-all"
+                            className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-md shadow-slate-200/50 dark:shadow-none flex items-center gap-3 cursor-pointer hover:shadow-lg transition-all border border-transparent dark:border-white/5"
                         >
                             <div className={`${item.iconBg} ${item.color} p-2.5 rounded-xl shrink-0`}>
                                 {React.cloneElement(item.icon, { size: 20 })}
                             </div>
                             <div>
-                                <h4 className="text-slate-900 text-xl font-black leading-none mb-1">{item.value}</h4>
+                                <h4 className="text-slate-900 dark:text-white text-xl font-black leading-none mb-1">{item.value}</h4>
                                 <p className="text-slate-500 text-[9px] font-bold uppercase tracking-tight leading-none">{item.label}</p>
                             </div>
                         </motion.div>
@@ -371,14 +374,14 @@ const Dashboard = () => {
                     <motion.div
                         whileTap={{ scale: 0.98 }}
                         onClick={() => scrollToTaskDetails('Daily')}
-                        className="bg-[#1E293B] border border-slate-700/50 rounded-2xl p-4 flex items-center justify-between cursor-pointer hover:bg-slate-800/80 transition-all cursor-pointer"
+                        className="dark:bg-[#1E293B] bg-white border dark:border-white/5 border-slate-200 rounded-2xl p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all shadow-sm"
                     >
                         <div className="flex items-center gap-3">
                             <div className="bg-blue-500/20 text-blue-400 p-2.5 rounded-full shrink-0">
                                 <MdCalendarToday size={22} />
                             </div>
                             <div>
-                                <h4 className="text-white text-xl font-black leading-none mb-1">{todayTasksCount}</h4>
+                                <h4 className="dark:text-white text-slate-900 text-xl font-black leading-none mb-1">{todayTasksCount}</h4>
                                 <p className="text-slate-400 text-[9px] font-bold">Today's Tasks</p>
                             </div>
                         </div>
@@ -388,14 +391,14 @@ const Dashboard = () => {
                     <motion.div
                         whileTap={{ scale: 0.98 }}
                         onClick={() => scrollToTaskDetails('Daily')}
-                        className="bg-[#1E293B] border border-slate-700/50 rounded-2xl p-4 flex items-center justify-between cursor-pointer hover:bg-slate-800/80 transition-all cursor-pointer"
+                        className="dark:bg-[#1E293B] bg-white border dark:border-white/5 border-slate-200 rounded-2xl p-4 flex items-center justify-between cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all shadow-sm"
                     >
                         <div className="flex items-center gap-3">
                             <div className="bg-emerald-500/20 text-emerald-400 p-2.5 rounded-full shrink-0">
                                 <MdCheckCircle size={22} />
                             </div>
                             <div>
-                                <h4 className="text-white text-xl font-black leading-none mb-1">{todayCompletedCount}</h4>
+                                <h4 className="dark:text-white text-slate-900 text-xl font-black leading-none mb-1">{todayCompletedCount}</h4>
                                 <p className="text-slate-400 text-[9px] font-bold">Today's Complete</p>
                             </div>
                         </div>
@@ -404,10 +407,10 @@ const Dashboard = () => {
                 </div>
 
                 {/* Task Details Analytics */}
-                <div ref={taskDetailsRef} className="bg-[#1E293B] border border-slate-700/50 rounded-[2rem] p-5 space-y-6 shadow-xl">
+                <div ref={taskDetailsRef} className="dark:bg-[#1E293B] bg-white border dark:border-white/5 border-slate-200 rounded-[2rem] p-5 space-y-6 shadow-xl dark:shadow-none">
                     <div className="flex items-center justify-between gap-2 overflow-hidden">
-                        <h3 className="text-white text-xs font-black font-outfit uppercase tracking-tighter whitespace-nowrap shrink-0">Task Details</h3>
-                        <div className="flex bg-[#0f172a] p-1 rounded-xl gap-1 border border-white/5">
+                        <h3 className="dark:text-white text-slate-900 text-xs font-black font-outfit uppercase tracking-tighter whitespace-nowrap shrink-0">Task Details</h3>
+                        <div className="flex dark:bg-[#0f172a] bg-slate-100 p-1 rounded-xl gap-1 border dark:border-white/5 border-slate-200">
                             {analyticsTabs.map(tab => (
                                 <button
                                     key={tab}
@@ -424,7 +427,7 @@ const Dashboard = () => {
                     </div>
 
                     {/* Task List for Selected Period */}
-                    <div className="mt-4 space-y-3 pt-4 border-t border-white/5">
+                    <div className="mt-4 space-y-3 pt-4 border-t dark:border-white/5 border-slate-100">
                         <div className="flex justify-between items-center mb-3">
                             <span className="text-slate-400 text-[10px] font-black uppercase tracking-widest">
                                 {filterMode !== 'all' ? `${filterMode.charAt(0).toUpperCase() + filterMode.slice(1)} ` : ''}
@@ -438,7 +441,7 @@ const Dashboard = () => {
                                 {filteredTasks.map((task) => (
                                     <div
                                         key={task.id}
-                                        className="bg-[#0b1222] border border-white/5 rounded-2xl p-3 sm:p-4 flex flex-col gap-3 group transition-all relative overflow-hidden"
+                                        className="dark:bg-[#0b1222] bg-slate-50/50 border dark:border-white/5 border-slate-200 rounded-2xl p-3 sm:p-4 flex flex-col gap-3 group transition-all relative overflow-hidden"
                                     >
                                         {task.isPinned && (
                                             <div className="absolute top-0 right-0 p-2 pointer-events-none">
@@ -450,7 +453,7 @@ const Dashboard = () => {
                                                 onClick={() => handleCompletionPress(task)}
                                                 className={`mt-0.5 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all shrink-0 ${task.completed || task.status === 'COMPLETED'
                                                     ? 'bg-emerald-500 border-emerald-500 text-white'
-                                                    : 'border-slate-700 bg-transparent text-transparent'
+                                                    : 'border-slate-300 dark:border-slate-700 bg-transparent text-transparent'
                                                     }`}
                                             >
                                                 <MdCheckCircle size={18} />
@@ -461,13 +464,13 @@ const Dashboard = () => {
                                                 onClick={() => setExpandedTaskId(expandedTaskId === task.id ? null : task.id)}
                                             >
                                                 <div className="flex justify-between items-start gap-2">
-                                                    <h4 className={`text-sm font-bold break-words leading-tight ${(task.completed || task.status === 'COMPLETED') ? 'text-slate-500 line-through' : 'text-white'
+                                                    <h4 className={`text-sm font-bold break-words leading-tight ${(task.completed || task.status === 'COMPLETED') ? 'text-slate-500 line-through' : 'dark:text-white text-slate-900'
                                                         }`}>
                                                         {task.title}
                                                     </h4>
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); toggleTaskPin(task.id); }}
-                                                        className={`p-1.5 rounded-full transition-all shrink-0 ${task.isPinned ? 'text-amber-500 bg-amber-500/10' : 'text-slate-600 hover:text-slate-400 opacity-0 group-hover:opacity-100'}`}
+                                                        className={`p-1.5 rounded-full transition-all shrink-0 ${task.isPinned ? 'text-amber-500 bg-amber-500/10' : 'text-slate-400 hover:text-slate-600 dark:text-slate-600 dark:hover:text-slate-400 opacity-0 group-hover:opacity-100'}`}
                                                     >
                                                         <MdPushPin size={16} className={task.isPinned ? 'rotate-45' : ''} />
                                                     </button>
@@ -494,19 +497,19 @@ const Dashboard = () => {
                                                     initial={{ opacity: 0, height: 0 }}
                                                     animate={{ opacity: 1, height: 'auto' }}
                                                     exit={{ opacity: 0, height: 0 }}
-                                                    className="pt-2 border-t border-white/5 flex gap-2"
+                                                    className="pt-2 border-t dark:border-white/5 border-slate-200 flex gap-2"
                                                 >
                                                     <button
                                                         onClick={() => handleCompletionPress(task)}
-                                                        className={`flex-1 py-2 rounded-xl font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all ${task.completed || task.status === 'COMPLETED' ? 'bg-slate-800 text-slate-400' : 'bg-emerald-500 text-white'}`}
+                                                        className={`flex-1 py-2 rounded-xl font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all ${task.completed || task.status === 'COMPLETED' ? 'dark:bg-slate-800 bg-slate-200 dark:text-slate-400 text-slate-500' : 'bg-emerald-500 text-white'}`}
                                                     >
                                                         {(task.completed || task.status === 'COMPLETED') ? <MdRefresh size={14} /> : <MdCheckCircle size={14} />}
                                                         {(task.completed || task.status === 'COMPLETED') ? 'Redo' : 'Complete'}
                                                     </button>
-                                                    <button onClick={() => handleEdit(task)} className="bg-slate-800 text-blue-400 p-2 rounded-xl border border-white/5 hover:bg-slate-700 transition-all flex items-center justify-center">
+                                                    <button onClick={() => handleEdit(task)} className="dark:bg-slate-800 bg-slate-100 text-blue-400 p-2 rounded-xl dark:border-white/5 border-slate-200 border hover:bg-slate-200 dark:hover:bg-slate-700 transition-all flex items-center justify-center">
                                                         <MdEdit size={16} />
                                                     </button>
-                                                    <button onClick={() => handleDelete(task.id)} className="bg-slate-800 text-red-500 p-2 rounded-xl border border-white/5 hover:bg-red-500/10 transition-all flex items-center justify-center">
+                                                    <button onClick={() => handleDelete(task.id)} className="dark:bg-slate-800 bg-slate-100 text-red-500 p-2 rounded-xl dark:border-white/5 border-slate-200 border hover:bg-red-50 dark:hover:bg-red-500/10 transition-all flex items-center justify-center">
                                                         <MdDelete size={16} />
                                                     </button>
                                                 </motion.div>
@@ -516,7 +519,7 @@ const Dashboard = () => {
                                 ))}
                             </div>
                         ) : (
-                            <div className="py-10 text-center bg-[#0b1222] rounded-3xl border border-dashed border-white/10">
+                            <div className="py-10 text-center dark:bg-[#0b1222] bg-slate-50/50 rounded-3xl border border-dashed dark:border-white/10 border-slate-300">
                                 <p className="text-slate-500 text-xs font-bold italic">No tasks found for this period</p>
                             </div>
                         )}
@@ -545,19 +548,19 @@ const Dashboard = () => {
 
             <AnimatePresence>
                 {remarkModalVisible && (
-                    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-6">
-                        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="bg-slate-900 border border-white/10 rounded-[2.5rem] w-full max-w-md p-8 shadow-3xl">
-                            <h2 className="text-2xl font-black text-white font-outfit mb-2">Complete Task</h2>
-                            <p className="text-slate-500 font-bold text-sm mb-8 uppercase tracking-widest">Add a completion note</p>
+                    <div className="fixed inset-0 dark:bg-slate-950/80 bg-slate-900/20 backdrop-blur-md z-[100] flex items-center justify-center p-6">
+                        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} className="dark:bg-slate-900 bg-white dark:border-white/10 border-slate-100 border rounded-[2.5rem] w-full max-w-md p-8 shadow-3xl">
+                            <h2 className="text-2xl font-black dark:text-white text-slate-900 font-outfit mb-2">Complete Task</h2>
+                            <p className="dark:text-slate-500 text-slate-400 font-bold text-sm mb-8 uppercase tracking-widest">Add a completion note</p>
                             <textarea
                                 value={completionRemark}
                                 onChange={(e) => setCompletionRemark(e.target.value)}
                                 placeholder="What did you accomplish?"
-                                className="w-full bg-slate-950 text-white rounded-[1.5rem] p-5 mb-8 border border-white/5 focus:border-blue-500 outline-none resize-none font-bold"
+                                className="w-full dark:bg-slate-950 bg-slate-50 dark:text-white text-slate-900 rounded-[1.5rem] p-5 mb-8 dark:border-white/5 border-slate-200 border focus:border-blue-500 outline-none resize-none font-bold"
                                 rows={4}
                             />
                             <div className="flex gap-4">
-                                <button onClick={() => { setRemarkModalVisible(false); setTaskToComplete(null); setCompletionRemark(''); }} className="flex-1 py-5 bg-slate-800 text-white rounded-3xl font-black uppercase tracking-widest text-[10px]">Cancel</button>
+                                <button onClick={() => { setRemarkModalVisible(false); setTaskToComplete(null); setCompletionRemark(''); }} className="flex-1 py-5 dark:bg-slate-800 bg-slate-100 dark:text-white text-slate-600 rounded-3xl font-black uppercase tracking-widest text-[10px]">Cancel</button>
                                 <button onClick={confirmCompletion} className="flex-1 py-5 bg-emerald-500 text-white rounded-3xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-emerald-500/20">Complete</button>
                             </div>
                         </motion.div>
@@ -573,7 +576,7 @@ const Dashboard = () => {
                 message="Are you sure you want to delete this task? This action cannot be undone."
                 confirmText="Delete Task"
             />
-        </div >
+        </div>
     );
 };
 

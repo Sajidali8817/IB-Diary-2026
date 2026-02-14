@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Sidebar from './Sidebar';
 import BottomNav from './BottomNav';
 import AddActionMenu from './AddActionMenu';
-import { useNavigate } from 'react-router-dom';
-
-import Sidebar from './Sidebar';
 import TaskAlertManager from './TaskAlertManager';
 
 const Layout = ({ children }) => {
@@ -17,7 +16,7 @@ const Layout = ({ children }) => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-slate-950 text-slate-200 selection:bg-blue-500/30 flex flex-col sm:flex-row">
+        <div className="min-h-screen dark:bg-slate-950 bg-slate-50 dark:text-slate-200 text-slate-900 selection:bg-blue-500/30 flex flex-col sm:flex-row transition-colors duration-300">
             {/* Desktop Sidebar */}
             <Sidebar />
 

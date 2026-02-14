@@ -47,18 +47,18 @@ const ConfirmModal = ({
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className="bg-slate-900 border border-white/10 rounded-[2.5rem] w-full max-w-sm p-8 shadow-3xl text-center"
+                        className="dark:bg-slate-900 bg-white dark:border-white/10 border-slate-200 border rounded-[2.5rem] w-full max-w-sm p-8 shadow-3xl text-center"
                     >
                         <div className={`w-20 h-20 rounded-[2rem] flex items-center justify-center mx-auto mb-6 ${getColorClass()}`}>
                             {getIcon()}
                         </div>
-                        <h2 className="text-2xl font-black text-white font-outfit mb-2">{title}</h2>
+                        <h2 className="text-2xl font-black dark:text-white text-slate-900 font-outfit mb-2">{title}</h2>
                         <p className="text-slate-500 font-bold text-sm mb-8">{message}</p>
 
                         <div className="flex gap-4">
                             <button
                                 onClick={onClose}
-                                className="flex-1 py-4 bg-slate-800 text-white rounded-2xl font-black uppercase tracking-widest text-[10px]"
+                                className="flex-1 py-4 dark:bg-slate-800 bg-slate-100 dark:text-white text-slate-700 rounded-2xl font-black uppercase tracking-widest text-[10px] dark:hover:bg-slate-700 hover:bg-slate-200 transition-colors"
                             >
                                 {cancelText}
                             </button>

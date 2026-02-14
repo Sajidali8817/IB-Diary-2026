@@ -33,7 +33,7 @@ const BottomNav = () => {
     return (
         <nav className="fixed bottom-0 left-0 right-0 z-50 sm:hidden">
             {/* Glassmorphic Background */}
-            <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]"></div>
+            <div className="absolute inset-0 dark:bg-slate-900/90 bg-white/90 backdrop-blur-xl dark:border-white/10 border-slate-200 border-t shadow-[0_-10px_40px_rgba(0,0,0,0.1)] transition-colors duration-300"></div>
 
             <div className="relative flex items-center justify-around h-20 px-2 max-w-lg mx-auto">
                 {currentTabs.map((tab) => (
@@ -54,7 +54,7 @@ const BottomNav = () => {
                             <motion.div
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
-                                className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/40 border-4 border-slate-900"
+                                className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/40 dark:border-slate-900 border-white border-4"
                             >
                                 {tab.icon}
                             </motion.div>
@@ -62,14 +62,13 @@ const BottomNav = () => {
                             <div className="flex flex-col items-center gap-1">
                                 <motion.div
                                     animate={{
-                                        color: isActive(tab.path) ? '#60A5FA' : '#94A3B8',
                                         scale: isActive(tab.path) ? 1.1 : 1
                                     }}
-                                    className="p-1"
+                                    className={`p-1 transition-colors duration-300 ${isActive(tab.path) ? 'text-blue-500' : 'dark:text-slate-400 text-slate-400'}`}
                                 >
                                     {tab.icon}
                                 </motion.div>
-                                <span className={`text-[10px] font-bold uppercase tracking-tight ${isActive(tab.path) ? 'text-blue-400' : 'text-slate-500'
+                                <span className={`text-[10px] font-bold uppercase tracking-tight transition-colors duration-300 ${isActive(tab.path) ? 'text-blue-500' : 'dark:text-slate-500 text-slate-500'
                                     }`}>
                                     {tab.label}
                                 </span>
@@ -86,7 +85,7 @@ const BottomNav = () => {
             </div>
 
             {/* Safe Area Inset for iOS */}
-            <div className="h-safe-bottom bg-slate-900/80 backdrop-blur-xl"></div>
+            <div className="h-safe-bottom dark:bg-slate-900/90 bg-white/90 backdrop-blur-xl transition-colors duration-300"></div>
         </nav>
     );
 };

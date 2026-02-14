@@ -1,11 +1,13 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MdHome, MdAssignment, MdNote, MdPerson, MdAdd, MdSchedule, MdSettings } from 'react-icons/md';
+import { MdHome, MdAssignment, MdNote, MdPerson, MdAdd, MdSchedule, MdSettings, MdDarkMode, MdLightMode } from 'react-icons/md';
 import { motion } from 'framer-motion';
 import { useAppContext } from '../context/AppContext';
+import { useTheme } from '../context/ThemeContext';
 
 const Sidebar = () => {
     const { userRole } = useAppContext();
+    const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -25,7 +27,7 @@ const Sidebar = () => {
     const isActive = (path) => location.pathname === path;
 
     return (
-        <aside className="hidden sm:flex flex-col w-64 lg:w-72 h-screen fixed left-0 top-0 bg-slate-900/50 backdrop-blur-2xl border-r border-white/5 z-40">
+        <aside className="hidden sm:flex flex-col w-64 lg:w-72 h-screen fixed left-0 top-0 dark:bg-slate-900/50 bg-white/50 backdrop-blur-2xl dark:border-white/5 border-slate-200 border-r z-40 transition-colors duration-300">
             {/* Logo Section */}
             <div className="p-8 mb-4 cursor-pointer" onClick={() => navigate('/dashboard')}>
                 <div className="flex items-center gap-3">
@@ -33,7 +35,7 @@ const Sidebar = () => {
                         <img src="/pwa-192x192.png" alt="Logo" className="w-8 h-8 object-contain" />
                     </div>
                     <div>
-                        <h1 className="text-xl font-black text-white font-outfit leading-none tracking-tight">IB Diary</h1>
+                        <h1 className="text-xl font-black dark:text-white text-slate-900 font-outfit leading-none tracking-tight">IB Diary</h1>
                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Smart Planner</p>
                     </div>
                 </div>
@@ -47,7 +49,7 @@ const Sidebar = () => {
                         onClick={() => navigate(item.path)}
                         className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300 group relative cursor-pointer ${isActive(item.path)
                             ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/30'
-                            : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
+                            : 'dark:text-slate-400 text-slate-500 dark:hover:bg-white/5 hover:bg-slate-100 dark:hover:text-slate-200 hover:text-slate-900'
                             }`}
                     >
                         <span className={`transition-transform duration-300 group-hover:scale-110 ${isActive(item.path) ? 'text-white' : 'text-blue-500/70 group-hover:text-blue-400'}`}>
@@ -78,11 +80,13 @@ const Sidebar = () => {
                     <span className="font-black uppercase tracking-widest text-xs">Quick Add</span>
                 </button>
 
-                <div className="mt-8 flex items-center gap-4 px-4 py-3 bg-slate-800/40 rounded-2xl border border-white/5 cursor-default">
-                    <div className="w-8 h-8 rounded-full bg-slate-700"></div>
+
+
+                <div className="mt-0 flex items-center gap-4 px-4 py-3 dark:bg-slate-800/40 bg-slate-100 rounded-2xl dark:border-white/5 border-slate-200 border cursor-default">
+                    <div className="w-8 h-8 rounded-full dark:bg-slate-700 bg-slate-300"></div>
                     <div>
                         <p className="text-[10px] font-bold text-slate-500 uppercase">Version</p>
-                        <p className="text-xs font-black text-white">1.0.4 Premium</p>
+                        <p className="text-xs font-black dark:text-white text-slate-900">1.0.4 Premium</p>
                     </div>
                 </div>
             </div>

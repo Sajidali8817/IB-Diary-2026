@@ -3,12 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MdClose, MdAssignment, MdNote, MdAdd, MdSchedule } from 'react-icons/md';
 import { useAppContext } from '../context/AppContext';
 
-
 const AddActionMenu = ({ visible, onClose, onAddTask, onAddNote, onAddSchedule }) => {
     const { userRole } = useAppContext();
 
+    if (!visible) return null;
+
     return (
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
             {visible && (
                 <div className="fixed inset-0 z-[100] flex items-end justify-center p-6">
                     {/* Backdrop */}
@@ -17,7 +18,7 @@ const AddActionMenu = ({ visible, onClose, onAddTask, onAddNote, onAddSchedule }
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+                        className="absolute inset-0 dark:bg-slate-900/60 bg-slate-900/20 backdrop-blur-sm"
                     />
 
                     {/* Menu Content */}
@@ -25,14 +26,14 @@ const AddActionMenu = ({ visible, onClose, onAddTask, onAddNote, onAddSchedule }
                         initial={{ y: '100%', opacity: 0, scale: 0.9 }}
                         animate={{ y: 0, opacity: 1, scale: 1 }}
                         exit={{ y: '100%', opacity: 0, scale: 0.9 }}
-                        className="relative w-full max-w-sm bg-slate-800 rounded-[2.5rem] p-8 shadow-2xl border border-white/10"
+                        className="relative w-full max-w-sm dark:bg-slate-800 bg-white rounded-[2.5rem] p-8 shadow-2xl dark:border-white/10 border-slate-200 border"
                     >
                         <div className="flex flex-col gap-6">
                             <div className="flex justify-between items-center mb-2">
-                                <h2 className="text-xl font-black text-white font-outfit uppercase tracking-widest">Create New</h2>
+                                <h2 className="text-xl font-black dark:text-white text-slate-900 font-outfit uppercase tracking-widest">Create New</h2>
                                 <button
                                     onClick={onClose}
-                                    className="w-10 h-10 flex items-center justify-center bg-slate-700/50 rounded-full text-slate-400 hover:text-white transition-all"
+                                    className="w-10 h-10 flex items-center justify-center bg-slate-700/50 rounded-full dark:text-slate-400 text-slate-500 hover:dark:text-white hover:text-slate-900 transition-all"
                                 >
                                     <MdClose size={24} />
                                 </button>
@@ -49,7 +50,7 @@ const AddActionMenu = ({ visible, onClose, onAddTask, onAddNote, onAddSchedule }
                                     <div className="w-12 h-12 rounded-2xl bg-blue-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/40 group-hover:scale-110 transition-transform">
                                         <MdAssignment size={28} />
                                     </div>
-                                    <span className="text-sm font-black text-white uppercase tracking-widest">New Task</span>
+                                    <span className="text-sm font-black dark:text-white text-slate-900 uppercase tracking-widest">New Task</span>
                                 </button>
 
                                 <button
@@ -62,7 +63,7 @@ const AddActionMenu = ({ visible, onClose, onAddTask, onAddNote, onAddSchedule }
                                     <div className="w-12 h-12 rounded-2xl bg-indigo-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/40 group-hover:scale-110 transition-transform">
                                         <MdNote size={28} />
                                     </div>
-                                    <span className="text-sm font-black text-white uppercase tracking-widest">New Note</span>
+                                    <span className="text-sm font-black dark:text-white text-slate-900 uppercase tracking-widest">New Note</span>
                                 </button>
 
                                 {(userRole === 'ADMIN' || userRole === 'EA') && (
@@ -76,7 +77,7 @@ const AddActionMenu = ({ visible, onClose, onAddTask, onAddNote, onAddSchedule }
                                         <div className="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center text-white shadow-lg shadow-emerald-500/40 group-hover:scale-110 transition-transform">
                                             <MdSchedule size={28} />
                                         </div>
-                                        <span className="text-sm font-black text-white uppercase tracking-widest">New Schedule</span>
+                                        <span className="text-sm font-black dark:text-white text-slate-900 uppercase tracking-widest">New Schedule</span>
                                     </button>
                                 )}
                             </div>

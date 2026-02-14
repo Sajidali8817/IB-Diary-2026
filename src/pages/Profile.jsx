@@ -4,15 +4,19 @@ import { useAppContext } from '../context/AppContext';
 import {
     MdEdit, MdDevices, MdLock, MdEmail, MdNotifications,
     MdChevronRight, MdCamera, MdLocalFireDepartment, MdCheckCircle, MdBarChart,
-    MdLogout
+    MdLogout, MdDarkMode, MdLightMode
 } from 'react-icons/md';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import ConfirmModal from '../components/ConfirmModal';
+import ThemeToggle from '../components/ThemeToggle';
+import { MdArrowBack } from 'react-icons/md';
+import { useTheme } from '../context/ThemeContext';
 
 const Profile = () => {
     const navigate = useNavigate();
     const { userProfile, userRole, tasks, streak, updateProfile, logout } = useAppContext();
+    const { theme, toggleTheme } = useTheme();
     const [notificationsEnabled, setNotificationsEnabled] = useState(true);
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -59,7 +63,7 @@ const Profile = () => {
         return (
             <Component
                 onClick={type === 'arrow' ? onClick : undefined}
-                className={`flex items-center justify-between p-4 ${type === 'arrow' ? 'hover:bg-slate-700/30 cursor-pointer' : ''} transition-all`}
+                className={`flex items-center justify-between p-4 ${type === 'arrow' ? 'dark:hover:bg-white/5 hover:bg-slate-50 cursor-pointer' : ''} transition-all`}
             >
                 <div className="flex items-center gap-3">
                     <div
@@ -68,7 +72,7 @@ const Profile = () => {
                     >
                         <Icon size={22} style={{ color }} />
                     </div>
-                    <span className="text-white font-medium">{label}</span>
+                    <span className="dark:text-white text-slate-900 font-medium">{label}</span>
                 </div>
                 {type === 'toggle' ? (
                     <button
@@ -90,10 +94,21 @@ const Profile = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-950 pb-24 selection:bg-indigo-500/30 overflow-x-hidden">
+        <div className="min-h-screen dark:bg-slate-950 bg-slate-50 pb-24 selection:bg-indigo-500/30 overflow-x-hidden transition-colors duration-300">
             <div className="min-h-screen">
+                {/* Header Actions */}
+                <div className="absolute top-6 left-6 right-6 z-20 flex justify-between items-center">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-all"
+                    >
+                        <MdArrowBack size={24} />
+                    </button>
+                    <ThemeToggle className="!bg-white/20 !backdrop-blur-md !border-white/30 !text-white hover:!bg-white/30 shadow-none" />
+                </div>
+
                 {/* Premium Header with Gradient */}
-                <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-b-[2.5rem] pb-20 pt-10 px-6 relative shadow-2xl">
+                <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-b-[2.5rem] pb-20 pt-16 px-6 relative shadow-2xl">
                     <div className="flex flex-col items-center text-center">
                         {/* Profile Image */}
                         <motion.div
@@ -122,12 +137,12 @@ const Profile = () => {
                             whileHover={{ y: -5 }}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="bg-white rounded-2xl p-4 text-center shadow-xl cursor-pointer transition-all border border-slate-100"
+                            className="dark:bg-slate-900 bg-white rounded-2xl p-4 text-center shadow-xl cursor-pointer transition-all dark:border-white/5 border-slate-100 border"
                         >
                             <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-2">
                                 <MdLocalFireDepartment size={20} className="text-amber-500" />
                             </div>
-                            <p className="text-xl font-black text-slate-800 leading-none mb-1">{streak}</p>
+                            <p className="text-xl font-black dark:text-white text-slate-800 leading-none mb-1">{streak}</p>
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Day Streak</p>
                         </motion.div>
 
@@ -136,12 +151,12 @@ const Profile = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.05 }}
-                            className="bg-white rounded-2xl p-4 text-center shadow-xl cursor-pointer transition-all border border-slate-100"
+                            className="dark:bg-slate-900 bg-white rounded-2xl p-4 text-center shadow-xl cursor-pointer transition-all dark:border-white/5 border-slate-100 border"
                         >
                             <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center mx-auto mb-2">
                                 <MdCheckCircle size={20} className="text-blue-500" />
                             </div>
-                            <p className="text-xl font-black text-slate-800 leading-none mb-1">{totalTasks}</p>
+                            <p className="text-xl font-black dark:text-white text-slate-800 leading-none mb-1">{totalTasks}</p>
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Total Tasks</p>
                         </motion.div>
 
@@ -150,12 +165,12 @@ const Profile = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
-                            className="bg-white rounded-2xl p-4 text-center shadow-xl cursor-pointer transition-all border border-slate-100"
+                            className="dark:bg-slate-900 bg-white rounded-2xl p-4 text-center shadow-xl cursor-pointer transition-all dark:border-white/5 border-slate-100 border"
                         >
                             <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center mx-auto mb-2">
                                 <MdBarChart size={20} className="text-emerald-500" />
                             </div>
-                            <p className="text-xl font-black text-slate-800 leading-none mb-1">{completionRate}%</p>
+                            <p className="text-xl font-black dark:text-white text-slate-800 leading-none mb-1">{completionRate}%</p>
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Completion</p>
                         </motion.div>
                     </div>
@@ -164,21 +179,21 @@ const Profile = () => {
                 {/* Account Section */}
                 <div className="px-4 mt-8">
                     <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-3 ml-1">Account Management</h3>
-                    <div className="bg-slate-800/50 backdrop-blur-xl border border-white/5 rounded-[2rem] overflow-hidden shadow-2xl">
+                    <div className="dark:bg-slate-900/50 bg-white backdrop-blur-xl dark:border-white/5 border-slate-200 border rounded-[2rem] overflow-hidden shadow-2xl">
                         <SettingItem
                             icon={MdEdit}
                             label="Edit Profile Information"
                             color="#3B82F6"
                             onClick={handleEditProfile}
                         />
-                        <div className="h-px bg-white/5 mx-4" />
+                        <div className="h-px dark:bg-white/5 bg-slate-100 mx-4" />
                         <SettingItem
                             icon={MdDevices}
                             label="Active Login Sessions"
                             color="#8B5CF6"
                             onClick={() => toast('Feature coming soon!')}
                         />
-                        <div className="h-px bg-white/5 mx-4" />
+                        <div className="h-px dark:bg-white/5 bg-slate-100 mx-4" />
                         <SettingItem
                             icon={MdLock}
                             label="Security & Password"
@@ -191,7 +206,7 @@ const Profile = () => {
                 {/* Preferences Section */}
                 <div className="px-4 mt-8">
                     <h3 className="text-xs font-black text-slate-500 uppercase tracking-widest mb-3 ml-1">System Preferences</h3>
-                    <div className="bg-slate-800/50 backdrop-blur-xl border border-white/5 rounded-[2rem] overflow-hidden shadow-2xl">
+                    <div className="dark:bg-slate-900/50 bg-white backdrop-blur-xl dark:border-white/5 border-slate-200 border rounded-[2rem] overflow-hidden shadow-2xl">
                         <SettingItem
                             icon={MdNotifications}
                             label="Push Notifications"
@@ -200,6 +215,7 @@ const Profile = () => {
                             value={notificationsEnabled}
                             onToggle={setNotificationsEnabled}
                         />
+
                     </div>
                 </div>
 
@@ -211,7 +227,7 @@ const Profile = () => {
                             e.stopPropagation();
                             setShowLogoutConfirm(true);
                         }}
-                        className="w-full h-16 bg-red-500/10 text-red-500 rounded-[2rem] font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 hover:bg-red-500 hover:text-white shadow-xl shadow-red-500/10 hover:shadow-red-500/30 transition-all border border-red-500/20 cursor-pointer group"
+                        className="w-full h-16 dark:bg-red-500/10 bg-red-50 text-red-500 rounded-[2rem] font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 hover:bg-red-500 hover:text-white shadow-xl shadow-red-500/10 hover:shadow-red-500/30 transition-all dark:border-red-500/20 border-red-100 border cursor-pointer group"
                     >
                         <MdLogout size={20} className="group-hover:-translate-x-1 transition-transform" />
                         Log Out From Profile
@@ -230,9 +246,9 @@ const Profile = () => {
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="bg-slate-800 border border-white/10 rounded-[2.5rem] p-8 w-full max-w-lg shadow-2xl shadow-black/50"
+                            className="dark:bg-slate-900 bg-white dark:border-white/10 border-slate-200 border rounded-[2.5rem] p-8 w-full max-w-lg shadow-2xl shadow-black/50"
                         >
-                            <h2 className="text-2xl font-black text-white font-outfit mb-6">Edit Profile</h2>
+                            <h2 className="text-2xl font-black dark:text-white text-slate-900 font-outfit mb-6">Edit Profile</h2>
 
                             <div className="space-y-4">
                                 <div className="space-y-1.5">
@@ -241,7 +257,7 @@ const Profile = () => {
                                         type="text"
                                         value={editForm.name}
                                         onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                                        className="w-full bg-slate-900/50 text-white rounded-2xl p-4 border border-white/5 focus:border-blue-500 outline-none transition-all font-medium"
+                                        className="w-full dark:bg-slate-950 bg-slate-50 dark:text-white text-slate-900 rounded-2xl p-4 dark:border-white/5 border-slate-200 border focus:border-blue-500 outline-none transition-all font-medium"
                                     />
                                 </div>
                                 <div className="space-y-1.5">
@@ -250,7 +266,7 @@ const Profile = () => {
                                         type="text"
                                         value={editForm.mobile}
                                         onChange={(e) => setEditForm({ ...editForm, mobile: e.target.value })}
-                                        className="w-full bg-slate-900/50 text-white rounded-2xl p-4 border border-white/5 focus:border-blue-500 outline-none transition-all font-medium"
+                                        className="w-full dark:bg-slate-950 bg-slate-50 dark:text-white text-slate-900 rounded-2xl p-4 dark:border-white/5 border-slate-200 border focus:border-blue-500 outline-none transition-all font-medium"
                                     />
                                 </div>
                                 <div className="space-y-1.5">
@@ -259,7 +275,7 @@ const Profile = () => {
                                         type="text"
                                         value={editForm.designation}
                                         onChange={(e) => setEditForm({ ...editForm, designation: e.target.value })}
-                                        className="w-full bg-slate-900/50 text-white rounded-2xl p-4 border border-white/5 focus:border-blue-500 outline-none transition-all font-medium"
+                                        className="w-full dark:bg-slate-950 bg-slate-50 dark:text-white text-slate-900 rounded-2xl p-4 dark:border-white/5 border-slate-200 border focus:border-blue-500 outline-none transition-all font-medium"
                                     />
                                 </div>
                             </div>
@@ -267,7 +283,7 @@ const Profile = () => {
                             <div className="flex gap-4 mt-8">
                                 <button
                                     onClick={() => setEditModalVisible(false)}
-                                    className="flex-1 py-4 bg-slate-700 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-slate-600 transition-all cursor-pointer"
+                                    className="flex-1 py-4 dark:bg-slate-700 bg-slate-200 dark:text-white text-slate-700 rounded-2xl font-black uppercase tracking-widest text-xs dark:hover:bg-slate-600 hover:bg-slate-300 transition-all cursor-pointer"
                                 >
                                     Cancel
                                 </button>

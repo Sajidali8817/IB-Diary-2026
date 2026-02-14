@@ -220,7 +220,7 @@ const TaskAlertManager = () => {
 
         // 2. Show Persistent Toast
         toast.custom((t) => (
-            <div className={`${t.visible ? 'animate-enter' : 'animate-leave'} max-w-md w-full bg-slate-900 shadow-2xl rounded-2xl pointer-events-auto flex flex-col border border-red-500/50 ring-4 ring-red-500/20`}>
+            <div className={`${t.visible ? 'animate-enter' : 'animate-leave'} max-w-md w-full dark:bg-slate-900 bg-white shadow-2xl rounded-2xl pointer-events-auto flex flex-col border border-red-500/50 ring-4 ring-red-500/20`}>
                 <div className="flex-1 p-4">
                     <div className="flex items-start">
                         <div className="flex-shrink-0 pt-0.5">
@@ -229,19 +229,19 @@ const TaskAlertManager = () => {
                             </div>
                         </div>
                         <div className="ml-4 flex-1">
-                            <p className="text-lg font-black text-white uppercase tracking-tight">
+                            <p className="text-lg font-black dark:text-white text-slate-900 uppercase tracking-tight">
                                 ⏰ Task Alarm!
                             </p>
-                            <p className="mt-1 text-base text-slate-200 font-medium">
+                            <p className="mt-1 text-base dark:text-slate-200 text-slate-700 font-medium">
                                 {task.title}
                             </p>
-                            <p className="mt-1 text-xs text-red-400 font-bold uppercase tracking-widest">
+                            <p className="mt-1 text-xs text-red-500 font-bold uppercase tracking-widest">
                                 Due Now • {task.dueTime}
                             </p>
                         </div>
                     </div>
                 </div>
-                <div className="flex border-t border-white/10">
+                <div className="flex dark:border-white/10 border-slate-100 border-t">
                     <button
                         onClick={() => {
                             stopAlarm();
