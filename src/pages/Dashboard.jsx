@@ -265,10 +265,6 @@ const Dashboard = () => {
                         </div>
 
                         <div className="flex items-center gap-2 shrink-0">
-                            <div className="dark:bg-[#1e293b]/80 bg-white/80 backdrop-blur-md dark:border-white/10 border-slate-200 border px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 shadow-xl">
-                                <span className="text-base">🔥</span>
-                                <span className="dark:text-white text-slate-900 font-black text-[9px] uppercase tracking-tighter whitespace-nowrap">{streak}-Day Streak</span>
-                            </div>
 
 
                             <ThemeToggle />
