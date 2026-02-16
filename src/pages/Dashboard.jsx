@@ -404,14 +404,14 @@ const Dashboard = () => {
 
                 {/* Task Details Analytics */}
                 <div ref={taskDetailsRef} className="dark:bg-[#1E293B] bg-white border dark:border-white/5 border-slate-200 rounded-[2rem] p-5 space-y-6 shadow-xl dark:shadow-none">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                        <h3 className="dark:text-white text-slate-900 text-xs font-black font-outfit uppercase tracking-tighter whitespace-nowrap">Task Details</h3>
-                        <div className="flex dark:bg-[#0f172a] bg-slate-100 p-1 rounded-xl gap-1 border dark:border-white/5 border-slate-200 shrink-0">
+                    <div className="flex items-center justify-between gap-1">
+                        <h3 className="dark:text-white text-slate-900 text-[10px] font-black font-outfit uppercase tracking-tighter whitespace-nowrap">Task Details</h3>
+                        <div className="flex dark:bg-[#0f172a] bg-slate-100 p-0.5 rounded-xl gap-0.5 border dark:border-white/5 border-slate-200 shrink-0">
                             {analyticsTabs.map(tab => (
                                 <button
                                     key={tab}
                                     onClick={() => { setActiveTab(tab); setFilterMode('all'); }}
-                                    className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeTab === tab
+                                    className={`px-2 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all ${activeTab === tab
                                         ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
                                         : 'text-slate-500 hover:text-slate-300'
                                         }`}
